@@ -1,14 +1,16 @@
-<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">Grid outside filter row and custom render</h2>
+@*<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">
+    Grid outside filter row and custom render
+</h2>*@
 @*beginofr*@
 @{
     var pref = "frowOut";
     var gridId = "GridFrowOut";
 }
 <div class="bar">
-    <div style="float: right;">
-        @Html.Awe().TextBox("txtSearch2").Placeholder("search...").CssClass("searchtxt")
-    </div>
-    <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>     
+    @*<div style="float: right;">
+            @Html.Awe().TextBox("txtSearch2").Placeholder("search...").CssClass("searchtxt")
+        </div>*@
+    <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
     <button type="button" onclick="$('#@gridId').data('api').batchSave()" class="awe-btn">Save All</button>
     <button type="button" onclick="$('#@gridId').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
 </div>
@@ -28,7 +30,7 @@
         </label>
         <label>
             Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
-        </label>       
+        </label>
     }
 
     <label class="nonflt">
@@ -39,10 +41,11 @@
 
 @(Html.Awe().Grid(gridId)
     .Url(Url.Action("DinnersFilterGrid", "GridFilterRowServerSideData"))
-    .Height(350)
+    .Height(650)
     .Reorderable()
+    .ShowGroupBar(false)
     //.Mod(o => o.Main().Custom("outsideFilter"))
-    .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))
+    .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))    
     .Columns(
           new Column { Bind = "Id", Width = 75 }
           .Mod(o => o.InlineId()),
@@ -267,17 +270,17 @@
 </style>
 @*endofr*@
 <br />
-<div class="tabs">
-    <div class="expl" data-caption="description">
-        Reusing the same data source (url) as for the Grid with filter row (server side data), except in this demo we're using the controls outside of the grid to filter the demo. <br />
-        Just like in the filter row demos the filter controls get their data from the grid model.<br />
-        Additionally there is filter persistence, so after page refresh the grid will have the same filters applied. <br />
-        And there's a custom item render mod applied so you can switch between cards view and rows.
-    </div>
-    <div data-caption="view">
-        @Html.Source("Shared/Demos/GridFilterOutside.cshtml", "ofr")
-    </div>
-    <div data-caption="controller">
-        @Html.Code("Demos/Grid/GridFilterRowServerSideDataController.cs").Action("DinnersFilterGrid")
-    </div>
-</div>
+@*<div class="tabs">
+        <div class="expl" data-caption="description">
+            Reusing the same data source (url) as for the Grid with filter row (server side data), except in this demo we're using the controls outside of the grid to filter the demo. <br />
+            Just like in the filter row demos the filter controls get their data from the grid model.<br />
+            Additionally there is filter persistence, so after page refresh the grid will have the same filters applied. <br />
+            And there's a custom item render mod applied so you can switch between cards view and rows.
+        </div>
+        <div data-caption="view">
+            @Html.Source("Shared/Demos/GridFilterOutside.cshtml", "ofr")
+        </div>
+        <div data-caption="controller">
+            @Html.Code("Demos/Grid/GridFilterRowServerSideDataController.cs").Action("DinnersFilterGrid")
+        </div>
+    </div>*@

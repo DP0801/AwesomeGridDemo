@@ -224,57 +224,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
             var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
-
-            //var filterRules = new Dictionary<string, Action>();
-            //var frow = new DinnerFrow();
-
-            //filterRules.Add("ProgramID", () =>
-            //{
-            //    if (ProgramID != null)
-            //    {
-            //        data1 = data1.Where(o => o.ProgramID.IndexOf(ProgramID, StringComparison.OrdinalIgnoreCase) >= 0);
-            //    }
-            //});
-
-            //filterRules.Add("ProgramName", () =>
-            //{
-            //    if (ProgramName != null)
-            //    {
-            //        data1 = data1.Where(o => o.ProgramName.IndexOf(ProgramName, StringComparison.OrdinalIgnoreCase) >= 0);
-            //    }
-            //});
-
-            //filterRules.Add("Key", () =>
-            //{
-            //    if (Key != null)
-            //    {
-            //        data1 = data1.Where(o => o.Key.IndexOf(Key, StringComparison.OrdinalIgnoreCase) >= 0);
-            //    }
-            //});
-
-            //filterRules.Add("Value", () =>
-            //{
-            //    if (Value != null)
-            //    {
-            //        data1 = data1.Where(o => o.Value.IndexOf(Value, StringComparison.OrdinalIgnoreCase) >= 0);
-            //    }
-            //});
-
-            //// apply rules present in forder (touched by the user)
-            //foreach (var prop in forder)
-            //{
-            //    if (filterRules.ContainsKey(prop))
-            //    {
-            //        filterRules[prop]();
-            //    }
-            //}
-
-            //// apply the rest
-            //foreach (var pair in filterRules.Where(o => !forder.Contains(o.Key)))
-            //{
-            //    pair.Value();
-            //}
-
+             
             return Json(new GridModelBuilder<T1ServiceModel>(data1, g)
             {
                 KeyProp = o => o.Id,
@@ -282,96 +232,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                 //,Tag = new { frow = frow }
             }.Build());
         }
-
-        public ActionResult DinnersFilterGrid1(GridParams g, string[] forder, int? date, string name, int? chef, int[] meal, bool? organic)
-        {
-            forder = forder ?? new string[] { };
-            var query = Db.Dinners.AsQueryable();
-            var filterRules = new Dictionary<string, Action>();
-            var frow = new DinnerFrow();
-
-            filterRules.Add("Name", () =>
-            {
-                if (name != null)
-                {
-                    query = query.Where(o => o.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
-                }
-            });
-
-            filterRules.Add("Date", () =>
-            {
-                var list = new List<KeyContent>
-                {
-                    new KeyContent("", "all years")
-                };
-
-                list.AddRange(AweUtil.ToKeyContent(query.Select(o => o.Date.Year).Distinct().OrderBy(o => o)));
-
-                frow.Date = list.ToArray();
-
-                if (date.HasValue)
-                {
-                    query = query.Where(o => o.Date.Year == date);
-                }
-            });
-
-            filterRules.Add("Chef", () =>
-            {
-                frow.Chef = query.Select(o => o.Chef).Distinct().Select(o => new KeyContent(o.Id, o.FirstName + " " + o.LastName)).ToArray();
-
-                if (chef.HasValue)
-                {
-                    query = query.Where(o => o.Chef.Id == chef);
-                }
-            });
-
-            filterRules.Add("Meal", () =>
-            {
-                if (meal != null)
-                {
-                    query = query.Where(o => meal.All(mid => o.Meals.Select(cm => cm.Id).Contains(mid)));
-                }
-
-                // get data after querying this time, to filter the meals dropmenu as well
-                frow.Meal = query.SelectMany(o => o.Meals).Distinct().OrderBy(o => o.Id).Select(o => new KeyContent(o.Id, o.Name)).ToArray();
-            });
-
-            filterRules.Add("Organic", () =>
-            {
-                var list = new List<KeyContent> { new KeyContent("", "all") };
-                list.AddRange(query.Select(o => o.Organic).Distinct().Select(o => new KeyContent(o, o ? "Yes" : "No")));
-
-                frow.Organic = list.ToArray();
-
-                if (organic != null)
-                {
-                    query = query.Where(o => o.Organic == organic);
-                }
-            });
-
-            // apply rules present in forder (touched by the user)
-            foreach (var prop in forder)
-            {
-                if (filterRules.ContainsKey(prop))
-                {
-                    filterRules[prop]();
-                }
-            }
-
-            // apply the rest
-            foreach (var pair in filterRules.Where(o => !forder.Contains(o.Key)))
-            {
-                pair.Value();
-            }
-
-            return Json(new GridModelBuilder<Dinner>(query, g)
-            {
-                KeyProp = o => o.Id,
-                Map = DinnerMapToGridModel,
-                Tag = new { frow = frow }
-            }.Build());
-        }
-
+         
         [HttpPost]
         public ActionResult BatchSave(T1ServiceModel[] inputs)
         {
@@ -385,7 +246,19 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                 {
                     try
                     {
-                        //var edit = input.Id.HasValue;
+                        var baseModel = new T1ServiceModel();
+                        baseModel.Id = input.Id;
+                        baseModel.ProgramID = input.ProgramID;
+                        baseModel.ProgramName = input.ProgramName;
+                        baseModel.Key = input.Key;
+                        baseModel.Value = input.Value;
+                        baseModel.IsActive = input.IsActive;
+
+                        string data = JsonConvert.SerializeObject(baseModel);
+
+                        string url = string.Format("{0}T1Service/UpdateServiceData", "http://localhost:11977/api/");
+                        var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+                        var edit = input.Id;
                         //var ent = edit ? Db.Get<Dinner>(input.Id) : new Dinner();
 
                         //ent.Name = input.Name;
@@ -405,6 +278,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                         //}
 
                         // res.Add(new { Item = MapToGridModel(ent) });
+                        res.Add(input);
                     }
                     catch (Exception ex)
                     {

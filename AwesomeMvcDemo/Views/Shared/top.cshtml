@@ -2,11 +2,11 @@
 <div id="header">
     <nav role="navigation" class="navmain">
         <ul class="menu mainmenu">
-            <li style="margin: 0;">
+            @*<li style="margin: 0;">
                 <a href="@Url.Action("Index", "Home")" id="btnLogo">
                     <i class="logo"></i>
                 </a>
-            </li>
+            </li>*@
             <li>
                 <button type="button" id="btnMenuToggle" class="" style="margin-bottom: 5px;" aria-label="toggle side menu">
                     <i class="iconGuide"></i>
@@ -16,7 +16,7 @@
             <li><a class="menua" href="@Url.Action("Index", "Home", new {area = ""})">Home</a></li>
             <li><a class="menua" href="@Url.Action("About", "Home", new {area = ""})">About</a></li>
         </ul>
-        <div class="stgpnl">
+        @*<div class="stgpnl">
             <div class="setting fmMenu"><input id="ddlFmw" type="hidden" value="https://demo.aspnetawesome.com" /></div>
             <div class="setting">
                 <input type="hidden" id="chTheme" value="@Model.Theme"/>
@@ -25,7 +25,7 @@
                 <input type="hidden" id="ddlDownloads" />
             </div>
             <div style="clear: both;"></div>
-        </div>
+        </div>*@
     </nav>
 </div>
 <script>
