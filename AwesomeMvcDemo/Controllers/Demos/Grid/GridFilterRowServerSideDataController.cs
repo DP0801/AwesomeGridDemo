@@ -175,9 +175,33 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
         {
             string filterCriteria = string.Empty;
 
-            if(!string.IsNullOrEmpty(ProgramID))
+            if (!string.IsNullOrEmpty(ProgramID))
             {
-                filterCriteria = "";
+                filterCriteria = " ProgramID like '%" + ProgramID + "%' ";
+            }
+
+            if (!string.IsNullOrEmpty(ProgramName))
+            {
+                if(string.IsNullOrEmpty(filterCriteria))
+                    filterCriteria = " ProgramName like '%" + ProgramName + "%' ";
+                else
+                    filterCriteria = filterCriteria + " AND ProgramName like '%" + ProgramName + "%' ";
+            }
+
+            if (!string.IsNullOrEmpty(Key))
+            {
+                if (string.IsNullOrEmpty(filterCriteria))
+                    filterCriteria = " Key like '%" + Key + "%' ";
+                else
+                    filterCriteria = filterCriteria + " AND Key like '%" + Key + "%' ";
+            }
+
+            if (!string.IsNullOrEmpty(Value))
+            {
+                if (string.IsNullOrEmpty(filterCriteria))
+                    filterCriteria = " Value like '%" + Value + "%' ";
+                else
+                    filterCriteria = filterCriteria + " AND Value like '%" + Value + "%' ";
             }
 
             forder = forder ?? new string[] { };
@@ -185,7 +209,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             var response = new WebHttpResponse();
             var baseModel = new BaseGridModel();
-            baseModel.search = string.Empty;
+            baseModel.search = filterCriteria;
             baseModel.pagenumber = g.Page;
             baseModel.pagesize = g.PageSize;
 
@@ -201,61 +225,61 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
             response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
             var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
 
-            var filterRules = new Dictionary<string, Action>();
-            var frow = new DinnerFrow();
+            //var filterRules = new Dictionary<string, Action>();
+            //var frow = new DinnerFrow();
 
-            filterRules.Add("ProgramID", () =>
-            {
-                if (ProgramID != null)
-                {
-                    data1 = data1.Where(o => o.ProgramID.IndexOf(ProgramID, StringComparison.OrdinalIgnoreCase) >= 0);
-                }
-            });
+            //filterRules.Add("ProgramID", () =>
+            //{
+            //    if (ProgramID != null)
+            //    {
+            //        data1 = data1.Where(o => o.ProgramID.IndexOf(ProgramID, StringComparison.OrdinalIgnoreCase) >= 0);
+            //    }
+            //});
 
-            filterRules.Add("ProgramName", () =>
-            {
-                if (ProgramName != null)
-                {
-                    data1 = data1.Where(o => o.ProgramName.IndexOf(ProgramName, StringComparison.OrdinalIgnoreCase) >= 0);
-                }
-            });
+            //filterRules.Add("ProgramName", () =>
+            //{
+            //    if (ProgramName != null)
+            //    {
+            //        data1 = data1.Where(o => o.ProgramName.IndexOf(ProgramName, StringComparison.OrdinalIgnoreCase) >= 0);
+            //    }
+            //});
 
-            filterRules.Add("Key", () =>
-            {
-                if (Key != null)
-                {
-                    data1 = data1.Where(o => o.Key.IndexOf(ProgramName, StringComparison.OrdinalIgnoreCase) >= 0);
-                }
-            });
+            //filterRules.Add("Key", () =>
+            //{
+            //    if (Key != null)
+            //    {
+            //        data1 = data1.Where(o => o.Key.IndexOf(Key, StringComparison.OrdinalIgnoreCase) >= 0);
+            //    }
+            //});
 
-            filterRules.Add("Value", () =>
-            {
-                if (Value != null)
-                {
-                    data1 = data1.Where(o => o.Value.IndexOf(ProgramName, StringComparison.OrdinalIgnoreCase) >= 0);
-                }
-            });
+            //filterRules.Add("Value", () =>
+            //{
+            //    if (Value != null)
+            //    {
+            //        data1 = data1.Where(o => o.Value.IndexOf(Value, StringComparison.OrdinalIgnoreCase) >= 0);
+            //    }
+            //});
 
-            // apply rules present in forder (touched by the user)
-            foreach (var prop in forder)
-            {
-                if (filterRules.ContainsKey(prop))
-                {
-                    filterRules[prop]();
-                }
-            }
+            //// apply rules present in forder (touched by the user)
+            //foreach (var prop in forder)
+            //{
+            //    if (filterRules.ContainsKey(prop))
+            //    {
+            //        filterRules[prop]();
+            //    }
+            //}
 
-            // apply the rest
-            foreach (var pair in filterRules.Where(o => !forder.Contains(o.Key)))
-            {
-                pair.Value();
-            }
+            //// apply the rest
+            //foreach (var pair in filterRules.Where(o => !forder.Contains(o.Key)))
+            //{
+            //    pair.Value();
+            //}
 
             return Json(new GridModelBuilder<T1ServiceModel>(data1, g)
             {
                 KeyProp = o => o.Id,
-                PageCount = (totalCount / g.PageSize),
-                Tag = new { frow = frow }
+                PageCount = (totalCount / g.PageSize)
+                //,Tag = new { frow = frow }
             }.Build());
         }
 
@@ -380,7 +404,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                         //    Db.Insert(ent);
                         //}
 
-                       // res.Add(new { Item = MapToGridModel(ent) });
+                        // res.Add(new { Item = MapToGridModel(ent) });
                     }
                     catch (Exception ex)
                     {
@@ -631,7 +655,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             return Json(frow.Chef);
         }
-        
+
         public class LunchFilterPrm
         {
             public string[] Forder { get; set; }
