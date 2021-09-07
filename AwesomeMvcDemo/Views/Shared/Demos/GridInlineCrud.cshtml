@@ -1,0 +1,86 @@
+@model DinnerInput
+@using AwesomeMvcDemo.Models
+@using AwesomeMvcDemo.ViewModels.Input
+
+<h2 data-u="@Url.Action("Index","GridInlineEditDemo")">Grid inline editing demo</h2>
+@*begin*@
+@{
+    var gridId = "DinnersInlineCrudGrid";
+    var initObj = new
+    {
+        Name = DemoUtils.RndName(),
+        Date = DateTime.Now.ToShortDateString(),
+        ChefId = Db.Chefs.First().Id,
+        MealsIds = Db.Meals.Take(2).Select(o => o.Id).ToArray()
+    };
+}
+<div class="bar">
+    <div style="float: right;">
+        @Html.Awe().TextBox("txtSearchInl").Placeholder("search...").CssClass("searchtxt")
+    </div>
+    <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
+
+    @Html.InlineCreateButtonForGrid(gridId, initObj, "Create with predefined values")
+</div>
+
+@Html.InitDeletePopupForGrid(gridId, "GridInlineEditDemo")
+
+@(Html.Awe().Grid(gridId)
+      .Mod(o => o.Main(false)
+          .InlineEdit(Url.Action("Save", "GridInlineEditDemo"))) //, reloadOnSave:true, oneRow:true
+      .Url(Url.Action("GridGetItems", "GridInlineEditDemo"))
+      .Parent("txtSearchInl", "search")
+      .Height(350)
+      .Resizable()
+      .Reorderable()
+      .Attr("data-syncg", "dinner") // crud sync using signalr in site.js
+      .Columns(
+          new Column { Bind = "Id", Width = 75 }
+          .Mod(o => o.InlineId()),
+
+          new Column { Bind = "Name" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Name"))),
+
+          new Column { Bind = "Date", Width = 180 }
+          .Mod(o => o.Inline(Html.Awe().DatePicker("Date").ReadonlyInput().ChangeYear().ChangeMonth())),
+
+          new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef", MinWidth = 170 }
+            .Mod(o => o.Inline(Html.Awe().Lookup("Chef").Controller("ChefLookup"), "ChefId")),
+
+          new Column { ClientFormat = ".(Meals)", Header = "Meals", MinWidth = 200, Grow = 2.2 }
+            .Mod(o => o.Inline(
+                Html.Awe().AjaxCheckboxList("Meals")
+                    .Url(Url.Action("GetMealsImg", "Data"))
+                    .Multiselect(d => d.ItemFunc("site.imgItem").CaptionFunc("utils.imgCaption")), "MealsIds")),
+
+          new Column { Bind = "BonusMeal.Name", ClientFormat = ".(BonusMeal)", Header = "Bonus Meal" }
+            .Mod(o => o.Inline(
+                Html.Awe().AjaxRadioList("BonusMealId")
+                    .Url(Url.Action("GetMealsImg", "Data"))
+                    .Odropdown(d => d.ItemFunc("site.imgItem").CaptionFunc("utils.imgCaption")), "BonusMealId")),
+
+          new Column { Bind = "Organic", Width = 90, ClientFormat = ".(DispOrganic)" }
+            .Mod(o => o.Inline(Html.Awe().CheckBox("Organic").Otoggl())),
+
+          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 80 },
+          new Column { ClientFormat = Html.InlineDeleteFormatForGrid(gridId), Width = 85 }))
+
+@*grid client validation (for MVC5 must be placed in a cshtml with @model DinnerInput)*@
+@(Html.BindOVld<DinnerInput>("#" + gridId))
+@*end*@
+
+<br />
+<div class="tabs">
+    <div data-caption="description" class="expl">
+        Inline editing for grid achieved using InlineEdit grid mod<br />
+
+        Delete action is the same as in the grid crud demo, using a popup.<br />
+
+        To set initial values on create set the initial model as a parameter
+        in the inlineCreate method, example: $grid.data('api').inlineCreate({ Name: 'hi' })<br />
+        On Save you also get the grid parameters, for example this grid has txtSearchInl as parent,
+        so you get the value of txtSearchInl as 'search' parameter in the Edit/Create post actions
+    </div>
+    <div data-caption="view">@Html.Source("Shared/Demos/GridInlineCrud.cshtml")</div>
+    <div data-caption="controller">@Html.Code("Demos/Grid/GridInlineEditDemoController.cs")</div>
+</div>

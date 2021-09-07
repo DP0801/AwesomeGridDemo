@@ -1,0 +1,37 @@
+@{
+    var restId = ViewData["Id"];
+    var gridId = "AddrGrid-" + restId;
+}
+
+@Html.InitDeletePopupForGrid(gridId, "AddressesGridCrud")
+
+<div style="padding: .5em;">
+    <div class="bar">
+        <button type="button" class="awe-btn" onclick="$('#@gridId').data('api').inlineCreate()">Create</button>
+    </div>
+    @(Html.Awe().Grid(gridId)
+        .Attr("data-syncg", "addr")
+        .Parameter("restaurantId", restId)
+        .Height(230)
+        .Url(Url.Action("GridGetItems", "AddressesGridCrud"))
+        .Mod(o => o.InlineEdit(Url.Action("CreateInline", "AddressesGridCrud"), Url.Action("EditInline", "AddressesGridCrud"), rowClickEdit:true))
+        .Groupable(false)
+        .Columns(
+            new Column { Bind = "Id", Hidden = true }
+                .Mod(o => o.InlineReadonly()),
+
+            new Column { Bind = "Line1", ClientFormat = ".(Line1)", Header = "Address Line 1" }
+                .Mod(o => o.Inline(Html.Awe().TextBox("Line1"))),
+
+            new Column { Bind = "Line2", ClientFormat = ".(Line2)", Header = "Address Line 2" }
+                .Mod(o => o.Inline(Html.Awe().TextBox("Line2"))),
+
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef" }
+                .Mod(o => o.Inline(
+                    Html.Awe().AjaxRadioList("ChefId")
+                        .Url(Url.Action("GetChefs", "Data"))
+                        .Odropdown())),
+
+            new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 90 },
+            new Column { ClientFormat = Html.InlineDeleteFormatForGrid(gridId), Width = 90 }))
+</div>

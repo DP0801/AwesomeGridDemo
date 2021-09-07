@@ -1,0 +1,156 @@
+@{
+    ViewBag.Title = "Grid Client Side API";
+}
+<h1>Grid client side API</h1>
+<script>
+    var page = function () {
+        function reloadGrid() {
+            $('#ApiDemoGrid').data('api').load();
+        }
+
+        function rem4spaces(str) {
+            var len = str.length;
+            var lio = str.indexOf('\n    ');
+            while (lio >= 0) {
+                str = str.substring(0, lio + 1) + str.substr(lio + 5);
+                lio = str.indexOf('\n    ', lio + 1);
+            }
+
+            return str.length === len ? str : rem4spaces(str);
+        }
+
+        function getFuncCode(f) {
+            return rem4spaces(f.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1]);
+        }
+
+        var scripts = {
+            "Reload Grid": reloadGrid,
+            "Reset grid": function () {
+                $('#ApiDemoGrid').data('api').load({ reset: true, params: {} });
+                // reset will bring the grid back to the initial state defined in the markup
+                // setting empty params, in case they were set before
+            },
+            "Go to page 3": function() {
+                $('#ApiDemoGrid').data('api').load({ page: 3  });
+            },
+            "Where Food contains Pie": function() {
+                $('#ApiDemoGrid').data('api').load({
+                    params: { Food: 'pie' }
+                });
+            },
+            "Where price is 10": function() {
+                $('#ApiDemoGrid').data('api').load({
+                    oparams: { Price: 10 }
+                    // oparams - one time params, sent only for this call,
+                    // params will persist until api with params: {}
+                });
+            },
+            "Sort Person Desc Price Asc": function() {
+                $('#ApiDemoGrid').data('api').load({
+                    sort: [{ Prop: "Person", Sort: 2}, { Prop: "Price", Sort: 1}],
+                    group:[]
+                });
+            },
+            "Group by Food, Location": function() {
+                $('#ApiDemoGrid').data('api').load({
+                    group: ['Food', 'Location'],
+                    sort: []
+                });
+            }
+        };
+
+        function render() {
+            var res = '';
+            for (var key in scripts) {
+                res += '<li><button type="button" class="awe-btn" data-key="' + key + '">' + key + '</button></li>';
+            }
+
+            return res;
+        }
+
+        function init() {
+            $('#samples').on('click', '.awe-btn', function (e) {
+                var key = $(this).data('key');
+                var f = scripts[key];
+                $('#vs').html(getFuncCode(f));
+                f();
+            });
+        }
+
+        return {
+            init: init,
+            render: render
+        };
+    }();
+</script>
+<div class="awe-il">
+    <textarea id="vs" cols="70" rows="7">
+$('#ApiDemoGrid').data('api').load(
+{
+    group: ['Food', 'Location'],
+    sort: [{ Prop: "Date", Sort: 2}],
+    params:{}
+});
+// Sort 0 = none, 1 = asc, 2 = desc
+    </textarea><br />
+    <button type="button" id="bApi" class="awe-btn">Execute</button>
+</div>
+
+<ul id="samples" class="samples awe-il">
+</ul>
+<br />
+<br />
+<script type="text/javascript">
+    $(function () {
+        page.init();
+        $('#samples').html(page.render());
+
+        $('#bApi').click(function () {
+            eval($('#vs').val());
+        });
+
+        var grid = $('#ApiDemoGrid');
+        grid.on('aweload awebeginload awerender', function (e, data, rd) {
+            if ($(e.target).is(grid)) {
+                $('#log').prepend(e.type + ' grid event at ' + site.getFormattedTime() + ' \n');
+            }
+        });
+    });
+</script>
+
+<div id="demoContent">
+    @*begin*@
+    @(Html.Awe().Grid("ApiDemoGrid")
+          .Mod(o => o.Main())
+          .Columns(
+              new Column { Bind = "Id", Width = 75 },
+              new Column { Bind = "Person" },
+              new Column { Bind = "Food" },
+              new Column { Bind = "Price", Width = 100 },
+              new Column { Bind = "Date", Width = 130 },
+              new Column { Bind = "Location" })
+          .Height(350)
+          .Url(Url.Action("ApiGrid")))
+    @*end*@
+</div>
+<br />
+<div class="tabs">
+    <div data-caption="description" class="expl">
+        <p>
+            Client side api is called by doing <code>$('#gridId').data('api') </code>and an api method
+        </p>
+        <ul>
+            <li><code>.load({ reset: true })</code> - will bring the grid back to the initial state defined in the markup</li>
+            <li>
+                <code>.load({group, sort, params, oparams})</code> - loads the grid with the specified grouping rules, sorting and additional parameters,
+                if a property is omitted than the grid won't change it's state for that property;
+                for example calling <code>.load({group: ['Food', 'Location']})</code> will change the grouping but won't affect the current sorting rules
+            </li>
+            <li><code>.clearpersist()</code> - clears the persistence data</li>
+        </ul>
+    </div>
+    <div data-caption="view">@Html.Source("GridDemo/ClientSideApi.cshtml")</div>
+    <div data-caption="controller">@Html.Code("Awesome/Grid/LunchGridController.cs")</div>
+</div>
+<h2>Events</h2>
+<textarea id="log" rows="7" style="width: 100%"></textarea>

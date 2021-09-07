@@ -1,0 +1,117 @@
+@{
+    ViewBag.Title = "Gantt Chart plus Awesome Grid demo";
+}
+
+<h1>Gantt chart and awesome grid</h1>
+@*begin*@
+@(Html.Awe().Grid("Meetings")
+    .DataFunc("getGridModel")
+    .Height(350)
+    .Columns(
+        new Column{ Bind = "Id", Width = 100 },
+        new Column{ Bind = "Title"},
+        new Column{ Bind = "Start"},
+        new Column{ Bind = "End"}
+    ))
+
+<br/>
+<br/>
+<div id="chart_div" style="overflow: auto;"></div>
+
+@section scripts
+{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        function getGridModel(sgp) {
+            return $.when($.get('@Url.Action("GridData")', sgp)).then(function(res) {
+                return buildGridModel(sgp, res);
+            });
+        }
+
+        function buildGridModel(sgp, res) {
+            var gp = utils.getGridParams(sgp);
+            
+            awef.loop(res.page,
+                function(itm) {
+                    // parse dates, in mvc5 itm.Start is a string like /Date(1624377600000)/
+                    itm.Start = utils.toDate(itm.Start); 
+                    itm.End = utils.toDate(itm.End);
+                });
+
+            tryDrawChart(res.page);
+
+            var opt = {
+                gp: gp,
+                key: "Id",
+                pageItems: res.page,
+                itemsCount: res.count,
+                map: function(itm) {
+                    return {
+                        Id: itm.Id, 
+                        Title: itm.Title,
+                        Start: itm.StartStr,
+                        End: itm.EndStr
+                    }
+                }
+            };
+
+            return utils.gridModelBuilder(opt);
+        }
+
+        google.charts.load('current', { 'packages': ['gantt'] });
+
+        function drawChart(cdata) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Task ID');
+            data.addColumn('string', 'Task Name');
+            data.addColumn('date', 'Start Date');
+            data.addColumn('date', 'End Date');
+            data.addColumn('number', 'Duration');
+            data.addColumn('number', 'Percent Complete');
+            data.addColumn('string', 'Dependencies');
+
+            var arr = [];
+            awef.loop(cdata, function (itm) {
+                arr.push([itm.Id.toString(), itm.Title, itm.Start, itm.End, null, 0, null]);
+            });
+
+            data.addRows(arr);
+
+            var options = {
+                height: data.getNumberOfRows() * 42 + 70,
+                width: data.getNumberOfRows() * 300
+            };
+
+            var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+
+        // try until google js is loaded
+        function tryDrawChart(cdata, atp) {
+            if (google.visualization.Gantt) {
+                drawChart(cdata);
+            } else {
+                if (atp && atp > 5) return;
+                setTimeout(function() {
+                    tryDrawChart(cdata, (atp || 1) + 1);
+                }, 1000);
+            }
+        }
+    </script>
+}
+@*end*@
+<br/>
+<br/>
+<div class="tabs">
+    <div data-caption="description" class="expl">
+        Using the awesome grid and <a href="https://developers.google.com/chart/interactive/docs/gallery/ganttchart">Google Gantt chart</a>. <br />
+        Data is ordered and paged on the server, after it is sent as json to the client, where we pass it to the gridModelBuilder and google Gantt chart.
+    </div>
+    <div data-caption="view">
+        @Html.Source("GanttChart/Index.cshtml")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Demos/Grid/GanttChartController.cs").Action("GridData")
+    </div>
+</div>

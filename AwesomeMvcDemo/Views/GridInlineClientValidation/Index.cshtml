@@ -1,0 +1,110 @@
+@model DinnerInput
+@using AwesomeMvcDemo.Models
+@using AwesomeMvcDemo.ViewModels.Input
+
+@{
+    ViewBag.Title = "Client validation for grid with inline editing";
+}
+
+<h1>Grid inline/batch editing client validation</h1>
+
+<div class="example">
+    
+    @*begin2*@
+    @{
+        var grid2Id = "DinnersGrid2";
+        var initObj = new
+        {
+            Name = DemoUtils.RndName(),
+            Date = DateTime.Now.ToShortDateString(),
+            ChefId = Db.Chefs.First().Id,
+            MealsIds = Db.Meals.Take(2).Select(o => o.Id).ToArray()
+        };
+    }
+    <div class="bar">
+        <button type="button" onclick="$('#@grid2Id').data('api').inlineCreate()" class="awe-btn">Create</button>
+        @Html.InlineCreateButtonForGrid(grid2Id, initObj, "Create with predefined values")
+        <button type="button" onclick="$('#@grid2Id').data('api').batchSave()" class="awe-btn">Save All</button>
+        <button type="button" onclick="$('#@grid2Id').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
+    </div>
+
+    @Html.InitDeletePopupForGrid(grid2Id, "GridInlineEditDemo")
+
+    @(Html.Awe().Grid(grid2Id)
+      .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave", "GridInlineBatchEditing")))
+      .Url(Url.Action("GridGetData", "GridInlineBatchEditing"))
+        .Height(350)
+        .Resizable()
+        .Reorderable()
+        .Attr("data-syncg", "dinner")
+        .Columns(
+            new Column { Bind = "Id", Width = 75 }
+                .Mod(o => o.InlineId()),
+
+            new Column { Bind = "Name" }
+                .Mod(o => o.Inline(Html.Awe().TextBox("Name"))),
+
+            new Column { Bind = "Date", Width = 160 }
+                .Mod(o => o.Inline(Html.Awe().DatePicker("Date").ReadonlyInput().ChangeYear().ChangeMonth())),
+
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef", MinWidth = 170 }
+                .Mod(o => o.Inline(Html.Awe().Odropdown("Chef").Url(Url.Action("GetChefs", "Data")), "ChefId")),
+
+            new Column { ClientFormat = ".(Meals)", Header = "Meals", MinWidth = 250 }
+                .Mod(o => o.Inline(
+                    Html.Awe().AjaxCheckboxList("Meals")
+                        .Multiselect()
+                        .Url(Url.Action("GetMealsImg", "Data")), "MealsIds")),
+
+            new Column { Bind = "BonusMeal.Name", ClientFormat = ".(BonusMeal)", Header = "Bonus Meal" }
+                .Mod(o => o.Inline(
+                    Html.Awe().AjaxRadioList("BonusMealId")
+                        .Odropdown()
+                        .Url(Url.Action("GetMealsImg", "Data")), "BonusMealId")),
+
+            new Column { Bind = "Organic", Width = 90, ClientFormat = ".(DispOrganic)" }
+                .Mod(o => o.Inline(Html.Awe().CheckBox("Organic").Otoggl())),
+
+            new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 80 },
+            new Column { ClientFormat = Html.InlineDeleteFormatForGrid(grid2Id), Width = 85 }))
+
+    @*grid client validation (for MVC5 call to BindOvld must be placed in a cshtml with @model DinnerInput)*@
+    
+    @(Html.BindOVld<DinnerInput>("#" + grid2Id, b =>
+    {
+        b.Prop("Name", "noAsdf", "Name can't contain asdf");
+
+        b.Prop("Name", "organicNameMinLen", "Name length can't be less than 5 when Organic = yes");
+        b.Relate("Organic", "Name"); // when checking Organic Name will also be updated
+    }))
+    
+    <script>
+        function noAsdf(o) {
+            return o.v.indexOf('asdf') !== -1;
+        }
+
+        function organicNameMinLen(o) {
+            var org = o.inp.closest('.awe-row').find('[name="Organic"]');
+            var name = o.inp.closest('.awe-row').find('[name="Name"]');
+
+            if (org.val() === 'true') {
+                return (name.val().length < 5);
+            }
+        }
+    </script>
+
+    @*end2*@
+    <br />
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            In this demo we show how we can achieve instant (on keyup, change) validation for grid inline editors. <br/>
+            By default we only have ajax validation, when the save ajax request is processed on the server we may get back validation errors. <br/>
+            
+            Besides the validation rules defined in the ViewModel (server side), in this demo we also added a few validation rules present only on the client:<br />
+            * Name can't contain "asdf"<br/>
+            * When Organic is true Name.length can't be less than 5.
+
+        </div>
+        <div data-caption="view">@Html.Source("GridInlineClientValidation/Index.cshtml", "2")</div>
+    </div>
+</div>

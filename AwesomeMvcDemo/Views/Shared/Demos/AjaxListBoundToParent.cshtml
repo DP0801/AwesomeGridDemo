@@ -1,0 +1,15 @@
+<h2 data-u="@Url.Action("Index","AjaxListDemo")">AjaxList bound to textbox for search</h2>
+@*begin*@
+@Html.Awe().TextBox("txtSearchMealsAl").CssClass("searchtxt").Placeholder("search...")
+<br />
+<br />
+@(Html.Awe().AjaxList("MealsAl")
+    .Url(Url.Action("Search","MealsAjaxList"))
+    .Parent("txtSearchMealsAl"))
+@*end*@
+<br />
+
+<div class="tabs code">
+    <div data-caption="view">@Html.Source("Shared/Demos/AjaxListBoundToParent.cshtml")</div>
+    <div data-caption="controller">@Html.Code("Awesome/AjaxList/MealsAjaxListController.cs")</div>
+</div>

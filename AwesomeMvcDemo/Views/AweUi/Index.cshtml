@@ -1,0 +1,1016 @@
+@using AwesomeMvcDemo.Models
+@{
+    ViewBag.Title = "aweui.js ui components library";
+    var mealsDir = Url.Content(DemoUtils.MealsUrl);
+}
+<h1>aweui.js ui components library</h1>
+<p class="expl">
+    You can use the awesome controls without the use of server side html helpers by using the aweui.js library.
+</p>
+<div class="example">
+    <h2>Grid remote data</h2>
+    @*begin*@
+    <div class="bar">
+        <input type="text" placeholder="search..." id="txtSearchGrid1">
+    </div>
+    <div id="grid1"></div>
+    <script>
+        $(function () {
+            aweui.grid({
+                id: 'grid1',
+                dataFunc: getRemData,
+                height: 350,
+                columns: [
+                    { bind: 'Id', width: 75, groupable: false },
+                    { bind: 'Person' },
+                    { bind: 'Food' },
+                    { bind: 'CountryName', header: 'Country' },
+                    { bind: 'Date', width: 120,  mod: { nohide: true } },
+                    { bind: 'Location' },
+                    { bind: "ChefName", header: "Chef" }
+                ],
+                parents: [
+                    { id: 'txtSearchGrid1', name: 'search' }
+                ],
+                mod: {
+                    pageSize: true,
+                    columnsSelector: true,
+                    pageInfo: true,
+                    loading: true,
+                    columnsAutohide: true
+                }
+            });
+        });
+
+        function getRemData(sgp) {
+            return $.when($.get('@Url.Action("LunchesUi", "Data")', sgp))
+                .then(function (res) {
+                    var gp = utils.getGridParams(sgp);
+
+                    // build grid model
+                    return utils.gridModelBuilder(
+                        {
+                            key: "Id",
+                            gp: gp,
+                            pageItems: res.items,
+                            itemsCount: res.count
+                        });
+                });
+        }
+    </script>
+    @*end*@
+    <br />
+    <div class="tabs">
+        <div class="expl" data-caption="description">
+            In this demo on the server side we query, order the data and select the items for the current page, while on the client we build the grid model.
+            The <code>count</code> (total items count) is sent from the server so the grid would know how many pages there are in total.
+        </div>
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml")</div>
+        <div data-caption="controller">@Html.Code("Awesome/DataController.cs").Action("LunchesUi")</div>
+    </div>
+</div>
+
+
+<div class="example">
+    <h2>Grid filter row with server side filtering</h2>
+    @*beginfltss*@
+    <div id="GridFrow2"></div>
+    <script>
+        $(function() {
+            aweui.grid({
+                id: 'GridFrow2',
+                url: '@Url.Action("LunchFilterGrid", "GridFilterRowServerSideData")',
+                height: 350,
+                reorderable: true,
+                columns: [
+                    {
+                        bind: 'Id', width: 100, groupable: false,
+                        mod: {
+                            filter: {
+                                html: function() { return 'search:'; }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Person',
+                        mod: {
+                            filter: {
+                                func: aweui.txt,
+                                opt: {
+                                    clearBtn: true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Food',
+                        minWidth: 200,
+                        clientFormatFunc: site.imgFood,
+                        mod: {
+                            filter: {
+                                func: aweui.radioList,
+                                opt: {
+                                    dataFunc: utils.frowData('Food'),
+                                    odropdown: {
+                                        itemFunc: site.imgFoodItem,
+                                        captionFunc: site.imgFoodCaption,
+                                        clearBtn: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Date',
+                        clientFormat: '.(DateStr)',
+                        width: 170
+                    },
+                    {
+                        bind: 'Country.Name',
+                        clientFormat: '.(CountryName)',
+                        header: 'Country',
+                        mod: {
+                            filter: {
+                                // frow prop to get dropdown data from, default is value of bind
+                                // also the name of the filter parameter
+                                valProp: 'Country'
+                            }
+                        }
+                    },
+                    {
+                        clientFormat: '.(MealsStr)',
+                        header: 'Meals',
+                        grow: 2,
+                        mod: {
+                            filter: {
+                                valProp: 'Meals',
+                                type: 'multiselect' // can also use 'multichk'
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Organic',
+                        width: 150
+                    }
+                ],
+                mod: {
+                    pageSize: true,
+                    columnsSelector: true,
+                    pageInfo: true,
+                    loading: true,
+                    columnsAutohide: true,
+                    filterRow: true,
+                    custom: [persistFilter]
+                }
+            });
+        });
+    </script>
+    <script src="~/Scripts/persistFrow.js"></script>
+    @*endfltss*@
+    <div class="tabs">
+        <div class="expl" data-caption="description">
+            Grid with filter row and server side filtering.
+        </div>
+        <div data-caption="view">
+            @Html.Source("Aweui/Index.cshtml", "fltss")
+        </div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid with filter row</h2>
+    @*beginfrowdist*@
+    <div class="bar">
+        @Html.Awe().TextBox("txtGridFrowSrc").Placeholder("search ...").CssClass("searchtxt")
+        <span class="hint">&nbsp; you can search multiple columns at the same time (try 'pizza tavern')</span>
+    </div>
+    <div id="GridFrow"></div>
+    <script>
+
+        $(function () {
+            aweui.grid({
+                id: 'GridFrow',
+                dataFunc: loadLunchesGrid,
+                height: 390,
+                reorderable: true,
+                columns: [
+                    {
+                        bind: 'Id', width: 75, groupable: false,
+                        mod: {
+                            filter: {
+                                html: function(cx){ return 'search:' }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Person',
+                        mod: {
+                            filter: {
+                                func: aweui.txt,
+                                opt: {
+                                    clearBtn: true
+                                }
+                            }
+                        } },
+                    {
+                        bind: 'Food',
+                        clientFormatFunc: "site.imgFood",
+                        minWidth: 200,
+                        mod: {
+                            filter: function(cx) {
+                                return {
+                                    func: aweui.radioList,
+                                    opt: {
+                                        odropdown: {
+                                            clearBtn: true,
+                                            itemFunc: site.imgFoodItem,
+                                            captionFunc: site.imgFoodCaption
+                                        },
+                                        dataFunc: foodGetData
+                                    }
+                                };
+                            }
+                        }
+                    },
+                    { bind: 'CountryName', header: 'Country' },
+                    {
+                        bind: 'Date', // sort by "Date" prop
+                        clientFormat: '.(DateStr)', // but display DateStr
+                        width: 170,
+                        mod: {
+                            nohide: true
+                        }
+                    },
+                    {
+                        clientFormat: '.(MealsStr)',
+                        header: 'Meals',
+                        grow: 1.7,
+                        mod: {
+                            filter: {
+                                type: 'multiselect',
+                                valProp: 'Meals'
+                            }
+                        }
+                    },
+                    { bind: "ChefName", header: "Chef" }
+                ],
+                parents: [
+                    { id: 'txtGridFrowSrc', name: 'search', load: false }
+                ],
+                columnWidth: 200,
+                mod: {
+                    pageSize: true,
+                    columnsSelector: true,
+                    pageInfo: true,
+                    loading: true,
+                    filterRow: { keyupsel: '.awe-txt' },
+                    freeze: { left: 2, right: 1 }
+                }
+            });
+        });
+
+        function loadLunchesGrid(sgp) {
+            // cache storage used by this demo (cstorg.js), it will load data on first call
+            return $.when(cstorg.get('@Url.Action("GetLunches", "Data")')).then(function(lunches) {
+                return getGridData(sgp, lunches);
+            });
+        }
+
+        function getGridData(sgp, lunches) {
+            var where = awef.where, select = awef.select, contains = awef.scont, loop = awef.loop;
+            var distLstFunc = utils.distLstFunc;
+            var gp = utils.getGridParams(sgp, ['meals']); // meals is array
+            var data = lunches;
+
+            // outside textbox search (if needed, this is a demo)
+            if (gp.search) {
+                var words = gp.search.toLowerCase().split(" ");
+
+                data = where(lunches, function (o) {
+                    var matches = 0;
+                    loop(words, function (w) {
+                        if (contains(o.Food, w) || contains(o.Person, w) || contains(o.MealsStr, w) || contains(o.CountryName, w)
+                            || contains(o.DateStr, w)
+                            || contains(o.ChefName, w)) matches++;
+                    });
+
+                    return matches === words.length;
+                });
+            }
+
+            // data used to populate some of the filter row dropdowns
+            var frowData = {};
+
+            // filter rules, will be applied in order ( gp.forder ),
+            // because we want to get the data for the dropdowns in order of filter application
+            var filterRules = {
+                Person: function() {
+                    if (gp.person) {
+                        data = where(data, function (o) { return contains(o.Person, gp.person) });
+                    }
+                },
+                Food: function() {
+                    var items = utils.distItmsFunc('Food')(data);
+
+                    frowData.Food = [{k: '', c: 'any', url: 'pasta.png'}].concat(select(items, function(o) { return { k: o.Food, c: o.Food, url: o.FoodPic } }));
+
+                    if (gp.food) {
+                        data = where(data, function (o) { return o.Food === gp.food });
+                    }
+                },
+                Meals: function() {
+                    if (gp.meals) {
+                        data = where(data, function(o) {
+                            var hasAll = true;
+
+                            // check that each of gp.meals is present in o.Meals
+                            var ids = select(o.Meals, function(m) { return m.Id; });
+                            loop(gp.meals, function(m) {
+                                hasAll = hasAll && awef.vcont(m, ids);
+                            });
+
+                            return hasAll;
+                        });
+                    }
+
+                    // get data after querying this time, to filter the meals dropmenu as well
+                    var distMeals = [];
+                    var dict = {};
+                    loop(data, function(o) {
+                        loop(o.Meals, function(m) {
+                            if (!dict[m.Id]) {
+                                distMeals.push(m);
+                                dict[m.Id] = 1;
+                            }
+                        });
+                    });
+
+                    frowData.Meals = select(distMeals, function(m) { return { k: m.Id, c: m.Name }; });
+                },
+                CountryName: function() {
+                    frowData.CountryName = toKeyContent(distLstFunc('CountryName')(data), 'any');
+                    if (gp.countryName) {
+                        data = where(data, function(o) { return o.CountryName === gp.countryName });
+                    }
+                },
+                ChefName: function(){
+                    frowData.ChefName = toKeyContent(distLstFunc('ChefName')(data).sort(), 'any');
+                    if (gp.chefName) {
+                        data = where(data, function (o) { return o.ChefName === gp.chefName });
+                    }
+                },
+                Date: function() {
+                    frowData.Date = toKeyContent(distLstFunc('Year')(data).sort(), 'all years');
+                    if (gp.date) {
+                        data = where(data, function (o) { return o.Year.toString() === gp.date });
+                    }
+                }
+            };
+
+            // apply rules in order
+            utils.applyFilters({
+                rules: filterRules,
+                gp: gp
+            });
+
+            function toKeyContent(arr, emptyn) {
+                var res = [];
+
+                if (emptyn) res.push({ k: '', c: emptyn });
+
+                awef.loop(arr, function (item) {
+                    res.push({ k: item, c: item });
+                });
+
+                return res;
+            }
+
+            var model = utils.gridModelBuilder(
+                {
+                    key: "Id",
+                    gp: gp,
+                    items: data,
+
+                    // replace default group header value for Date column
+                    getHeaderVal: { Date: function (o) { return o.DateStr; } },
+                    tag: { frow: frowData }
+                });
+
+            return model;
+        }
+
+        $(function() {
+            $('#txtGridFrowSrc').keyup(function() {
+                $('#GridFrow').data('api').load();
+            });
+        });
+
+        function foodGetData() {
+            var tag = this.f.closest('.awe-grid').data('o').lrs.tg;
+            return tag.frow['Food'];
+        }
+    </script>
+    @*endfrowdist*@
+    <br />
+    <br />
+    <div class="tabs">
+        <div class="expl" data-caption="description">
+            Using a filter row with a dropdown for each column, each dropdown contains the collection of distinct column values.
+        </div>
+        <div data-caption="view">
+            @Html.Source("Aweui/Index.cshtml", "frowdist")
+        </div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid with filter row multiple editors</h2>
+    @*beginFilterMulti*@
+    <div id="GridFrowMulti"></div>
+    <style>
+        .compact .o-op .o-cptn {
+            display: none;
+        }
+
+        .compact .awe-field.o-op {
+            width: 2em;
+            flex-shrink: 0;
+        }
+
+        /*filter row cell with value*/
+        .compact .o-frow td.o-hv {
+            box-shadow: inset 0 -1px 0 #b1b2b2;
+        }
+    </style>
+    <script>
+        $(function() {
+            var clrAll = function() { return "<button type='button' class='awe-btn o-clrAll awe-clrbtn'><i class='awe-icon awe-icon-x'></i></button>"; }
+
+            aweui.grid({
+                id: 'GridFrowMulti',
+                cssClass: 'compact',
+                dataFunc: loadLunchesGridMulti,
+                height: 390,
+                reorderable: true,
+                columns: [
+                    {
+                        bind: 'Id', width: 75, groupable: false,
+                        mod: {
+                            filter: {
+                                html: function (cx) { return 'search:' }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Person',
+                        mod: {
+                            filter: {
+                                func: aweui.txt,
+                                opt: {
+                                    placeholder: 'Person',
+                                    clearBtn: true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        bind: 'Price',
+                        mod: {
+                            filter: [
+                                {
+                                    func: aweui.txt,
+                                    opt: {
+                                        numeric: true,
+                                        placeholder: 'Price',
+                                    }
+                                },
+                                {
+                                    valProp: 'PriceOp',
+                                    func: aweui.radioList,
+                                    opt: {
+                                        cssClass: 'o-op',
+                                        dataFunc: priceOpData,
+                                        odropdown: true
+                                    }
+                                },
+                                {
+                                    html: clrAll
+                                }]
+                        }
+                    },
+                    {
+                        bind: 'Date', clientFormat: '.(DateStr)', width: 230,
+                        mod: {
+                            filter: [
+                                {
+                                    func: aweui.datepicker,
+                                    opt: {
+                                        changeYear: true,
+                                        changeMonth: true
+                                    }
+                                },
+                                {
+                                    valProp: 'DateOp',
+                                    func: aweui.radioList,
+                                    opt: {
+                                        cssClass: 'o-op',
+                                        dataFunc: dateOpData,
+                                        odropdown: true
+                                    }
+                                },
+                                {
+                                    html: clrAll
+                                }]
+                        }
+                    },
+                    {
+                        bind: 'CountryName', header: 'Country',
+                        mod: {
+                            filter: [
+                                {
+                                    valProp: 'Country',
+                                    type: 'multichk',
+                                    clearBtn: false
+                                },
+                                {
+                                    valProp: 'CountryOp',
+                                    func: aweui.radioList,
+                                    opt: {
+                                        cssClass: 'o-op',
+                                        dataFunc: countryOpData,
+                                        odropdown: true
+                                    }
+                                },
+                                { html: clrAll }]
+                        }
+                    },
+                    {
+                        clientFormat: '.(MealsStr)',
+                        header: 'Meals',
+                        grow: 1.7,
+                        mod: {
+                            filter: {
+                                type: 'multiselect',
+                                valProp: 'Meals'
+                            }
+                        }
+                    },
+                    { bind: "ChefName", header: "Chef" }
+                ],
+                mod: {
+                    pageSize: true,
+                    columnsSelector: true,
+                    pageInfo: true,
+                    loading: true,
+                    columnsAutohide: true,
+                    filterRow: { keyupsel: '.awe-txt:not(.awe-dtp)' }
+                }
+            });
+        });
+
+        function priceOpData() {
+            return [{k: '', c: 'equals'},
+                { k: '>', c: 'is greater' },
+                { k: '<', c: 'is less' }];
+        }
+
+        function dateOpData() {
+            return [{ k: '', c: 'equals' },
+                { k: '<', c: 'before' },
+                { k: '>', c: 'after' }];
+        }
+
+        function countryOpData() {
+            return [{ k: '', c: 'include' },
+                { k: 'exclude', c: 'exclude' }];
+        }
+
+        function toDate(strd) {
+            return new Date(Number(strd.replace(/\D/g, '')));
+        }
+
+        function loadLunchesGridMulti(sgp) {
+            // cache storage used by this demo (cstorg.js), it will load data on first call
+            // for no cache you can replace cstorg.get with $.get
+            return $.when(cstorg.get('@Url.Action("GetLunches", "Data")')).then(function(lunches) {
+                return getGridDataMulti(sgp, lunches);
+            });
+        }
+
+        function getGridDataMulti(sgp, lunches) {
+            var where = awef.where, select = awef.select, contains = awef.scont, loop = awef.loop;
+            var distLstFunc = utils.distLstFunc;
+            var gp = utils.getGridParams(sgp, ['country', 'meals']); // country, meals are arrays
+            var data = lunches;
+
+            // data used to populate some of the filter row dropdowns
+            var frowData = {};
+
+            // filter rules, will be applied in order ( gp.forder ),
+            // because we want to get the data for the dropdowns in order of filter application
+            var filterRules = {
+                Person: function() {
+                    if (gp.person) {
+                        data = where(data, function (o) { return contains(o.Person, gp.person) });
+                    }
+                },
+                Price: function() {
+                    if (gp.price) {
+                        var op = function(o) { return awef.seq(o.Price, gp.price); }
+
+                        if (gp.priceOp === '>') {
+                            op = function (o) { return o.Price > gp.price; }
+                        }
+                        else if (gp.priceOp === '<') {
+                            op = function (o) { return o.Price < gp.price; }
+                        }
+
+                        data = where(data, op);
+                    }
+                },
+                Date: function () {
+                    if (gp.date) {
+                        var date = awem.toDate(gp.date);
+
+                        var op = function (o) { return toDate(o.Date).valueOf() === date.valueOf(); }
+
+                        if (gp.dateOp === '>') {
+                            op = function(o) {
+                                return toDate(o.Date) > date;
+                            }
+                        }
+                        else if (gp.dateOp === '<') {
+                            op = function (o) { return toDate(o.Date) < date; }
+                        }
+
+                        data = where(data, op);
+                    }
+                },
+                Meals: function() {
+                    if (gp.meals) {
+                        data = where(data, function(o) {
+                            // check that each of gp.meals is present in o.Meals
+
+                            var mids = select(o.Meals, function(m) { return m.Id; });
+
+                            var hasAll = true;
+                            loop(gp.meals, function(mid) {
+                                hasAll = hasAll && awef.vcont(mid, mids);
+                            });
+
+                            return hasAll;
+                        });
+                    }
+
+                    // get data after querying this time, to filter the meals dropmenu as well
+                    var distMeals = [];
+                    var udict = {};
+                    loop(data, function(o) {
+                        loop(o.Meals, function(m) {
+                            if (!udict[m.Id]) {
+                                distMeals.push(m);
+                                udict[m.Id] = 1;
+                            }
+                        });
+                    });
+
+                    frowData.Meals = select(distMeals, function(m) { return { k: m.Id, c: m.Name }; });
+                },
+                Country: function() {
+                    frowData.Country = toKeyContent(distLstFunc('CountryName')(data));
+
+                    if (gp.country) {
+
+                        // include
+                        var op = function(o) {
+                            var res = false;
+                            loop(gp.country,
+                                function(c) {
+                                    if (c === o.CountryName) res = true;
+                                });
+
+                            return res;
+                        }
+
+                        if (gp.countryOp === 'exclude') {
+                            op = function(o) {
+                                var res = true;
+                                loop(gp.country,
+                                    function(c) {
+                                        if (c === o.CountryName) res = false;
+                                    });
+
+                                return res;
+                            }
+                        }
+
+                        data = where(data, op);
+                    }
+                },
+                ChefName: function(){
+                    frowData.ChefName = toKeyContent(distLstFunc('ChefName')(data).sort(), 'any');
+                    if (gp.chefName) {
+                        data = where(data, function (o) { return o.ChefName === gp.chefName });
+                    }
+                }
+            };
+
+            // apply rules in order
+            utils.applyFilters({
+                rules: filterRules,
+                gp: gp
+            });
+
+            function toKeyContent(arr, emptyn) {
+                var res = [];
+
+                if (emptyn) res.push({ k: '', c: emptyn });
+
+                awef.loop(arr, function (item) {
+                    res.push({ k: item, c: item });
+                });
+
+                return res;
+            }
+
+            var model = utils.gridModelBuilder(
+                {
+                    key: "Id",
+                    gp: gp,
+                    items: data,
+
+                    // replace default group header value for Date column
+                    getHeaderVal: { Date: function (o) { return o.DateStr; } },
+                    tag: { frow: frowData }
+                });
+
+            return model;
+        }
+    </script>
+    @*endFilterMulti*@
+    <br />
+    <div class="tabs">
+        <div class="expl" data-caption="description">
+            We can add more than one editor in one filter cell, and in this demo we added additional operator dropdowns and clear all values in cell buttons.
+            Custom css is used to make the Op dropdowns (operator equals/less than etc.) take less space in the cell.
+            <code>o-op</code> class on the dropdowns tells filter row to ignore its value for adding <code>o-hv</code> class to the cell, so if you only select a value in an op dropdown (less than/equals etc.),
+            but not in another editor in the cell (without o-op) you won't get the little box-shadow under the cell.<br />
+            <code>o-clrAll</code> class tells the filter row that clicking on the button with this class should clear all input values in this cell.
+        </div>
+        <div data-caption="view">
+            @Html.Source("Aweui/Index.cshtml", "FilterMulti")
+        </div>
+        <div data-caption="controller">
+            @Html.Code("Awesome/DataController.cs").Action("GetLunches")
+        </div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Odropdown</h2>
+    @*beginodd*@
+    <input type="hidden" id="mealOdd">
+    <br />
+    <br />
+    <h2>Odropdown with fav buttons</h2>
+    <input type="hidden" id="mealOddFavs">
+    <br />
+    <br />
+    <script>
+        var meals = @Html.Raw(DemoUtils.Encode(Db.Meals.Select(o => new { k = o.Id, c = o.Name, cid = o.Category.Id, url = mealsDir + o.Name + ".jpg" })));
+        $(function () {
+            aweui.radioList({
+                id: 'mealOdd',
+                dataFunc: function() { return meals;  },
+                odropdown: {
+                    autoSelectFirst: true,
+                    itemFunc: site.imgItem,
+                    captionFunc: utils.imgCaption
+                }
+            });
+
+            aweui.radioList({
+                id: 'mealOddFavs',
+                dataFunc: function () { return meals; },
+                odropdown: {
+                    autoSelectFirst: true,
+                    itemFunc: site.imgItem,
+                    captionFunc: utils.imgCaption,
+                    favCount: 4,
+                    frozenFavs: [meals[1].k],
+                    favs: [meals[5].k, meals[7].k] // initial favs
+                }
+            });
+
+        });
+    </script>
+    @*endodd*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "odd")</div>
+    </div>
+</div>
+
+
+<div class="example">
+    <h2>RadioList, CheckboxList, Multiselect</h2>
+    @*beginrdl*@
+    <div class="ib arl">
+        <input type="hidden" id="rdl1" value="@Db.Categories[1].Id">
+    </div>
+    <div class="ib arl">
+        <input type="hidden" id="chkl1">
+    </div>
+    <div class="ib arl">
+        <input type="hidden" id="multi1" value="[@Db.Categories[1].Id, @Db.Categories[2].Id]">
+    </div>
+
+    <div class="ib arl">
+        <input type="hidden" id="multichk1" value="[@Db.Categories[1].Id, @Db.Categories[2].Id]">
+    </div>
+
+    <script>
+        $(function() {
+            aweui.radioList({
+                id: 'rdl1',
+                //url: '@Url.Action("GetCategories", "Data")',
+                dataFunc: getCategories,
+                ochk: true
+            });
+
+            aweui.checkboxList({
+                id: 'chkl1',
+                dataFunc: getCategories,
+                ochk: true
+            });
+
+            aweui.checkboxList({
+                id: 'multi1',
+                dataFunc: getCategories,
+                multiselect: true
+            });
+
+            aweui.checkboxList({
+                id: 'multichk1',
+                dataFunc: getCategories,
+                multichk: { clearBtn: true }
+            });
+
+            var loadedItems = null;
+
+            function getCategories() {
+                if (!loadedItems) {
+                    loadedItems = $.when($.get('@Url.Action("GetCategories", "Data")'))
+                        .then(function(res) {
+                            loadedItems = res;
+                            return res;
+                        });
+                }
+
+                return loadedItems;
+            }
+        });
+    </script>
+    @*endrdl*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "rdl")</div>
+        <div data-caption="controller">@Html.Code("Awesome/DataController.cs").Action("GetCategories")</div>
+    </div>
+</div>
+<div class="example">
+    <h2>Checkbox</h2>
+    @*beginchk*@
+    <label>ochk: <input type="hidden" id="chk1" value="true"></label>
+    <label>otoggl: <input type="hidden" id="toggl1" name="toggl1" value="true"></label>
+    <script>
+        $(function () {
+            aweui.chk({ id: 'chk1', ochk: true });
+            aweui.chk({ id: 'toggl1', otoggl: true });
+        });
+    </script>
+    @*endchk*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "chk")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Textbox</h2>
+    @*begintxt*@
+    <input type="hidden" id="txt1" value="10" />
+    <script>
+        $(function () {
+            aweui.txt({
+                id: 'txt1',
+                numeric: {
+                    max: 100
+                }
+            });
+        });
+    </script>
+    @*endtxt*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "txt")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Datepicker</h2>
+    @*begindtp*@
+    <input type="text" id="dtp1" />
+    <script>
+        $(function () {
+            aweui.datepicker({
+                id: 'dtp1'
+            });
+        });
+    </script>
+    @*enddtp*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "dtp")</div>
+    </div>
+</div>
+<div class="example">
+    <h2>Lookups</h2>
+    @*beginlkp*@
+    <input type="hidden" id="lkp1" />
+    <br />
+    <br />
+    <input type="hidden" id="mlkp1" />
+    <script>
+        $(function () {
+            aweui.lookup({
+                id: 'lkp1',
+                clearButton: true,
+                getUrl: '@Url.Action("GetItem", "MealLookup")',
+                searchUrl: '@Url.Action("Search", "MealLookup")'
+            });
+
+            aweui.multilookup({
+                id: 'mlkp1',
+                clearButton: true,
+                getUrl: '@Url.Action("GetItems", "MealsMultiLookup")',
+                searchUrl: '@Url.Action("Search", "MealsMultiLookup")',
+                selectedUrl: '@Url.Action("Selected", "MealsMultiLookup")'
+            });
+        });
+    </script>
+    @*endlkp*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "lkp")</div>
+    </div>
+</div>
+<div class="example">
+    <h2>Popups</h2>
+    @*beginpf*@
+    <script>
+        $(function () {
+            aweui.initPopupForm({
+                id: 'popupForm1',
+                height: 200,
+                setCont: function (sp, o) {
+                    var str = '<form>' +
+                        'name: <input type="text" name="name" />' +
+                        '</form>';
+                    o.scon.html(str);
+                },
+                postFunc: function (sp) {
+                    var prm = utils.getParams(sp);
+                    return { name: prm.name };
+                },
+                success: function (res) {
+                    awem.notif('name = ' + res.name);
+                }
+            });
+        });
+    </script>
+    <button type="button" class="awe-btn" onclick="aweui.open('popupForm1', {}, event)">open PopupForm</button>
+    @*endpf*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "pf")</div>
+    </div>
+</div>
+
+@*beginchl*@
+<button type="button" class="awe-btn" id="btnFrench" onclick="goFrench()">change aweui to French</button>
+<script>
+    function goFrench() {
+        $.ajax(document.root + '/Scripts/awedict/awedict.fr.js',
+            {
+                dataType: "script",
+                cache: true,
+                success: function () {
+                    aweui.init();
+                    aweui.rebuildAll();
+                }
+            });
+    }
+</script>
+@*endchl*@
+<div class="tabs code">
+    <div data-caption="view">@Html.Source("Aweui/Index.cshtml", "chl")</div>
+</div>
+<br />
+<br />
+<p>
+    For more aweui demos visit <a href="https://aweui.aspnetawesome.com">aweui.aspnetawesome.com</a>
+</p>

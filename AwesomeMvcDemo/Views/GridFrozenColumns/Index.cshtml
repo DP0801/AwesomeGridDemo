@@ -1,0 +1,160 @@
+@{
+    ViewBag.Title = "Grid Frozen Columns on the Left and Right side";
+}
+
+<h1>Grid Frozen Columns</h1>
+<div class="example">
+    <h2>Grid with columns frozen on the left</h2>
+    @*begin*@
+    @(Html.Awe().Grid("GridFzLeft")
+        .Mod(o => o.Main().Freeze(3))
+        .Columns(
+            new Column { Bind = "Id", Width = 75, Groupable = false, Resizable = false },
+            new Column { Bind = "Person" },
+            new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 },
+            new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" },
+            new Column { Bind = "Date", Width = 120 },
+            new Column { Bind = "Location" },
+            new Column { ClientFormat = ".(Meals)", MinWidth = 250, Header = "Meals" },
+            new Column { ClientFormat = "sample text1", Header = "Column 1" },
+            new Column { ClientFormat = "sample text2", Header = "Column 2" },
+            new Column { ClientFormat = "sample text3", Header = "Column 3" },
+            new Column { ClientFormat = "sample text4", Header = "Column 4" },
+            new Column { ClientFormat = "sample text5", Header = "Column 5" },
+            new Column { Bind = "Organic" },
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef", MinWidth = 180 })
+        .Url(Url.Action("GetItems"))
+        .Height(350)
+        .Reorderable()
+        .Resizable())
+    @*end*@
+    <br />
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Columns can be frozen on the left and right side of the grid. If there isn't enough available space the columns will automatically unfreeze.
+        </div>
+        <div data-caption="view">@Html.Source("GridFrozenColumns/Index.cshtml")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid with columns frozen on the left and right</h2>
+    @*begin1*@
+    @(Html.Awe().Grid("GridFzLeftRight")
+        .Mod(o => o.Main().Freeze(3, 2))
+        .Columns(
+            new Column { Bind = "Id", Width = 75, Groupable = false, Resizable = false },
+            new Column { Bind = "Person" },
+            new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 },
+            new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" },
+            new Column { Bind = "Date", Width = 120 },
+            new Column { Bind = "Location" },
+            new Column { ClientFormat = ".(Meals)", MinWidth = 250, Header = "Meals" },
+            new Column { ClientFormat = "sample text1", Header = "Column 1" },
+            new Column { ClientFormat = "sample text2", Header = "Column 2" },
+            new Column { ClientFormat = "sample text3", Header = "Column 3" },
+            new Column { ClientFormat = "sample text4", Header = "Column 4" },
+            new Column { ClientFormat = "sample text5", Header = "Column 5" },
+            new Column { Bind = "Organic" },
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef", MinWidth = 180 })
+        .Url(Url.Action("GetItems"))
+        .Height(350)
+        .Reorderable()
+        .Resizable())
+    @*end1*@
+    <br />
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("GridFrozenColumns/Index.cshtml", 1)</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Tree Grid with frozen columns</h2>
+    @*begintree*@
+    <div class="frzdemo">
+        @(Html.Awe().Grid("LazyTreeGrid")
+            .Mod(o => o.Freeze(1, 1))
+            .Reorderable()
+            .Resizable()
+            .Url(Url.Action("LazyTree", "TreeGrid"))
+            .Columns(
+                new Column { Bind = "Name", MinWidth = 200},
+                new Column { ClientFormat = "sample 1", Header = "header 1"},
+                new Column { ClientFormat = "sample 2", Header = "header 2"},
+                new Column { ClientFormat = "sample 3", Header = "header 3"},
+                new Column { ClientFormat = "sample 4", Header = "header 4"},
+                new Column { ClientFormat = "sample 5", Header = "header 5"},
+                new Column { Bind = "Id", Width = 100 })
+            .PageSize(3)
+            .Height(400))
+    </div>
+    @*endtree*@
+
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("GridFrozenColumns/Index.cshtml", "tree")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid with nests and frozen columns</h2>
+    @*beginnest*@
+    <div class="frzdemo">
+        @(Html.Awe().Grid("MasterDetailGrid")
+            .Mod(o => o.Freeze())
+            .Columns(
+                new Column {ClientFormat = DemoUtils.DetailNstBtn, Width = 100, Header = "Id"},
+                new Column {Bind = "Person"},
+                new Column {Bind = "Food"},
+                new Column {Bind = "Location"},
+                new Column {ClientFormat = "sample 1", Header = "header 1"},
+                new Column {ClientFormat = "sample 2", Header = "header 2"},
+                new Column {ClientFormat = "sample 3", Header = "header 3"},
+                new Column {ClientFormat = "sample 4", Header = "header 4"},
+                new Column {ClientFormat = "sample 5", Header = "header 5"})
+            .Url(Url.Action("GetItems", "LunchGrid"))
+            .PageSize(5)
+            .Resizable()
+            .Reorderable()
+            .Height(350)
+            .Nests(new Nest {Name = "detailnst", Url = Url.Action("LunchDetail", "GridNestingDemo"), LoadOnce = true}))
+    </div>
+    @*endnest*@
+
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("GridFrozenColumns/Index.cshtml", "nest")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid MultiRow Header Groups and frozen columns</h2>
+    @*beginmhg*@
+    @(Html.Awe().Grid("GridHg")
+        .Mod(o => o.Main().Freeze(2, 3))
+        .HeaderGroups(
+            new HeaderGroup {Content = "Main details", Level = 0, Id = "main"},
+            new HeaderGroup {Content = "Dinner details", Level = 0, Id = "dinfo"},
+            new HeaderGroup {Content = "Chef", Id = "chef", Level = 1},
+            new HeaderGroup {Content = "Address", Id = "addr", Level = 1})
+        .Columns(
+            new Column {Bind = "Id", Width = 75, Groupable = false, Resizable = false},
+            new Column {Bind = "Person", HeaderGroups = new[] {"main"}},
+            new Column {Bind = "Food", HeaderGroups = new[] {"main"}},
+            new Column {ClientFormat = "sample 1", Header = "header 1"},
+            new Column {ClientFormat = "sample 2", Header = "header 2", MinWidth = 200 },
+            new Column {ClientFormat = "sample 3", Header = "header 3", MinWidth = 200 },
+            new Column {ClientFormat = "sample 4", Header = "header 4", MinWidth = 200 },
+            new Column {ClientFormat = "sample 4", Header = "header 5"},
+            new Column {Bind = "Date", Width = 120, HeaderGroups = new[] {"dinfo"}},
+            new Column {Bind = "Location", HeaderGroups = new[] {"dinfo", "addr"}},
+            new Column {Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country", HeaderGroups = new[] {"dinfo", "addr"}},
+            new Column {Bind = "Chef.FirstName", ClientFormat = ".(ChefFName)", Header = "First Name", HeaderGroups = new[] {"dinfo", "chef"}},
+            new Column {Bind = "Chef.LastName", ClientFormat = ".(ChefLName)", Header = "Last Name", HeaderGroups = new[] {"dinfo", "chef"}})
+        .Url(Url.Action("LunchGrid", "Data"))
+        .Resizable()
+        .Reorderable()
+        .Height(400))
+    @*endmhg*@
+    <div class="tabs code">
+        <div data-caption="view">@Html.Source("GridFrozenColumns/Index.cshtml", "mhg")</div>
+    </div>
+</div>

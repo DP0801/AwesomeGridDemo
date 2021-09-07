@@ -1,0 +1,74 @@
+@using AwesomeMvcDemo.Models
+@{
+    ViewBag.Title = "Client Load using .DataFunc extension Demo";
+}
+<h1>Client data loading demo</h1>
+<div class="expl">
+    Specifying <code>DataFunc</code> (js function) instead of <code>Url</code>, if DataFunc is specified, Url is ignored.<br />
+    Besides data the js function can also return a promise which will return the data later.
+</div>
+<br />
+<br />
+@*begin*@
+<div class="example">
+    @{
+        var categories = Db.Categories;
+        var meals = Db.Meals;
+    }
+    @(Html.Awe().AjaxCheckboxList("list1")
+        .Ochk()
+        .DataFunc("getCategories")
+        .Value(new[] { categories[0].Id, categories[2].Id }))
+    @(Html.Awe().AjaxRadioList("list3")
+        .Ochk()
+        .DataFunc("getCategories")
+        .Value(categories[3].Id))
+</div>
+
+<div class="example">
+    <h2>Cascading</h2>
+    @(Html.Awe().AjaxRadioList("list2")
+        .Ochk()
+        .DataFunc("getCategories")
+        .Value(categories[2].Id))
+    @(Html.Awe().AjaxCheckboxList("childList1")
+        .Ochk()
+        .Parent("list2")
+        .DataFunc("getChildMeals"))
+</div>
+
+<div class="example">
+    <h2>Load from server first time only</h2>
+    @Html.Awe().AjaxRadioList("CatCached1").Url(Url.Action("GetCategories", "Data")).Ochk()
+    @Html.Awe().AjaxRadioList("CatCached2").Url(Url.Action("GetCategories", "Data")).Ochk()
+    <div class="expl">
+        The first time this url is requested it will be loaded from the server and stored in sessionStorage after that all subsequent request will get the data from the session storage.
+        <code>CacheGetFunc</code> is a util extension in this demo and will render a call to <code>cstorg.get</code> (cstorg.js).
+    </div>
+</div>
+
+<script>
+    var categories = @Html.Raw(DemoUtils.Encode(categories));
+    var meals = @Html.Raw(DemoUtils.Encode(meals));
+
+    function getCategories() {
+        return awef.select(categories, function(item) {
+            return { c: item.Name, k: item.Id };
+        });
+    }
+
+    function getChildMeals(params) {
+        var pobj = utils.getParams(params);
+        var result = [];
+
+        awef.loop(meals, function(item) {
+            if(item.Category.Id == pobj.parent)
+                result.push({ c: item.Name, k: item.Id });
+        });
+
+        return result;
+    }
+</script>
+@*end*@
+
+@Html.Source("ClientDataLoadingDemo/Index.cshtml", wrap: true)

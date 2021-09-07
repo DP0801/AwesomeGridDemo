@@ -1,0 +1,66 @@
+@{
+    ViewBag.Title = "Grid columns auto width, autofit";
+}
+<h1>Grid columns auto width, autofit</h1>
+<div class="example">
+    @*begin*@
+    @(Html.Awe().Grid("Grid1")
+      .Mod(o => o.Main().Custom("gridColAutoWidth"))
+      .Columns(
+          new Column { Bind = "Id", Width = 75, Groupable = false, Resizable = false },
+          new Column { Bind = "Person" },
+          new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 },
+          new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" },
+          new Column { Bind = "Date", Width = 120 },
+          new Column { Bind = "Location" },
+          new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef" })
+      .Url(Url.Action("GetItems", "LunchGrid"))
+      .Height(350)
+      .Reorderable())
+    <br />
+    <script>
+        function gridColAutoWidth(o) {
+            var g = o.v;
+
+            // data loaded
+            awe.bind(o, g, 'aweload', function (e) {
+                if (!$(e.target).is(g)) return;
+                var colSizes = {};
+                var scale = $('<span class="awe-row"></span>');
+                g.find('.awe-content').append(scale);
+
+                // calc col sizes
+                g.find('.awe-itc .awe-row').each(function (i, rel) {
+                    $(rel).children().each(function (tdi, tdel) {
+                        // get content width
+                        scale.html($(tdel).html());
+                        colSizes[tdi] = Math.max(colSizes[tdi] || 0, scale.width());
+                    });
+                });
+
+                scale.remove();
+
+                // apply col sizes
+                var columns = g.data('o').columns;
+                g.find('colgroup').first().children().each(function (rendi, cel) {
+                    var coli = $(cel).data('i');
+                    if (awef.isNotNull(coli)) {
+                        columns[coli].Mw = colSizes[rendi] + 50; // plus for padding
+                    }
+                });
+
+                g.data('api').render();
+            });
+        }
+    </script>
+    @*end*@
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Grid column width is determined by the cells contents, each time the user goes on a different page the grid columns widths can change 
+            (you may need to make your browser window smaller to notice that).
+        </div>
+        <div data-caption="view">
+            @Html.Source("GridColumnsAutoWidth/Index.cshtml")
+        </div>
+    </div>
+</div>

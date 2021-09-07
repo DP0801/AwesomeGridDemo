@@ -1,0 +1,50 @@
+<h2 data-u="@Url.Action("Index","GridCrudDemo")">Grid CRUD</h2>
+
+@*begin*@
+@{
+    var gid = "DinnersGrid";
+}
+@Html.InitCrudPopupsForGrid(gid, "DinnersGridCrud")
+
+<div class="bar">
+    <div style="float: right;">
+        @Html.Awe().TextBox("txtSearch").Placeholder("search...").CssClass("searchtxt")
+    </div>
+
+    @(Html.Awe().Button()
+          .Text("Create")
+          .OnClick(Html.Awe().OpenPopup("create" + gid)))
+</div>
+
+@(Html.Awe().Grid(gid)
+    .Mod(o => o.Main())
+    .Url(Url.Action("GridGetItems", "DinnersGridCrud"))
+    .Parent("txtSearch", "search")
+    .Attr("data-syncg", "dinner")
+    .Height(350)
+    .Columns(
+        new Column { Bind = "Id", Width = 75 },
+        new Column { Bind = "Name" }.Mod(o => o.Nohide()),
+        new Column { Bind = "Date" },
+        new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef" },
+        new Column { ClientFormat = ".(Meals)", Header = "Meals", Grow = 2, MinWidth = 200 },
+        new Column { Bind = "BonusMeal.Name", ClientFormat = ".(BonusMeal)", Header = "Bonus Meal"},
+        new Column { ClientFormat = Html.EditFormatForGrid(gid), Width = 55 }.Mod(o => o.Nohide()),
+        new Column { ClientFormat = Html.DeleteFormatForGrid(gid), Width = 55 }.Mod(o => o.Nohide())))
+@*end*@
+
+<div class="tabs code">
+    <div data-caption="description" class="expl">
+        Grid crud, built using the Grid and PopupForm helpers.
+        <br />
+        There are three PopupForms for create, edit and delete, they are initialized via InitCrudPopupsForGrid custom helper, 
+        each PopupForm has Success js function assigned.<br/>
+        Create post action returns the grid model for the new Item so the js func will render and append it.<br />
+        Edit post action returns the item's Id and the js func is using grid.api.update to update the row (api.update will call GridModelBuilder.GetItem).<br />
+        Delete PopupForm has OnLoad js func used to animate the row that is about to be deleted, and the post action will delete the item and return the item's Id,
+        the js func will use grid.api.select to select and remove the row, if there's no rows left grid.api.load will be called.
+    </div>
+    <div data-caption="view">@Html.Source("Shared/Demos/GridCrud.cshtml")</div>
+    <div data-caption="controller">@Html.Code("Demos/Grid/DinnersGridCrudController.cs")</div>
+    <div data-caption="create view">@Html.Source("DinnersGridCrud/Create.cshtml")</div>
+</div>

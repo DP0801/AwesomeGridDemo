@@ -1,0 +1,48 @@
+<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">Grid filter row server data</h2>
+
+@*beginssf*@
+@(Html.Awe().Grid("GridFrow2")
+        .Height(390)
+        .Reorderable()
+        .Resizable()
+        .Url(Url.Action("LunchFilterGrid", "GridFilterRowServerSideData"))
+        .Mod(o => o.Main().FilterRow())
+        .Columns(
+            new Column {Bind = "Id", Width = 100 }.Mod(o => o.Filter("search:")),
+
+            new Column {Bind = "Person"}
+                .Mod(o => o.Filter(Html.Awe().TextBox("Person").Placeholder("Person").ClearButton())),
+
+            new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 }
+                .Mod(o => o.Filter(
+                    Html.Awe().AjaxRadioList("Food")
+                        .DataFunc("utils.frowData('Food')")
+                        .Odropdown(d => d.ItemFunc("site.imgFoodItem")
+                            .CaptionFunc("site.imgFoodCaption")
+                            .ClearBtn()))),
+
+            new Column { Bind = "Date", ClientFormat = ".(DateStr)", Width = 170 },
+
+            new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" }
+                .Mod(o => o.Filter(valProp: "Country")), // frow.Country contains the data for the Country dropdown (by default frow.Bind is used)
+            // also action parameter name will be "Country", as defined in valProp
+
+            new Column { ClientFormat = ".(MealsStr)", MinWidth = 200, Header = "Meals", Grow = 1.7 }
+                .Mod(o => o.Filter(valProp: "Meals", type: FilterType.Multiselect)), // take filter editor data from frow.Meals
+
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef"}
+                .Mod(o => o.Filter(valProp:"Chef"))))
+@*endssf*@
+<br />
+<div class="tabs">
+    <div class="expl" data-caption="description">
+        Filter row using server side data filtering, all the data filtering, sorting, paging is done on the server.<br />
+        Clicking the grid reset button will also reset all the filters.
+    </div>
+    <div data-caption="view">
+        @Html.Source("Shared/Demos/GridFilterRowServerData.cshtml", "ssf")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Demos/Grid/GridFilterRowServerSideDataController.cs").Action("LunchFilterGrid")
+    </div>
+</div>

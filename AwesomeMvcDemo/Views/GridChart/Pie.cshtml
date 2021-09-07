@@ -1,0 +1,103 @@
+
+@{
+    ViewBag.Title = "Using Awesome Grid with google pie chart";
+}
+
+<h1>Awesome Grid and google pie chart</h1>
+
+@*begin*@
+<div class="bar">
+    <input type="text" placeholder="search..."  id="txtSearch" />
+</div>
+@(Html.Awe().Grid("Garden")
+    .DataFunc("getGridModel")
+    .Groupable(false)
+    .Load(false)
+    .Paging(false)
+    .Height(350)
+    .Parent("txtSearch", "search")
+    .Columns(
+        new Column{ Bind = "Id", Width = 100},
+        new Column{ Bind = "Name"},
+        new Column{ Bind = "Value"}
+    ))
+
+<br />
+<br />
+<div id="chart_div" style="min-height: 500px"></div>
+
+@section scripts
+{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        function getGridModel(sgp) {
+            return $.when($.get('@Url.Action("GetData")', sgp)).then(function(res) {
+                return buildGridModel(sgp, res);
+            });
+        }
+
+        function buildGridModel(sgp, res) {
+            var gp = utils.getGridParams(sgp);
+
+            tryDrawChart(res);
+
+            var opt = {
+                gp: gp,
+                pageItems: res,
+                itemsCount: res.length
+            };
+
+            return utils.gridModelBuilder(opt);
+        }
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(function() {
+            $('#Garden').data('api').load();
+        });
+
+        function drawChart(cdata) {
+
+            var arr = [['Plant', 'Percentage']];
+
+            awef.loop(cdata, function (itm) {
+                arr.push([itm.Name, itm.Value]);
+            });
+
+            var data = google.visualization.arrayToDataTable(arr);
+
+            var options = {
+                title: 'My Garden'
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+
+        // try until google js is loaded
+        function tryDrawChart(cdata, atp) {
+            if (google.visualization.PieChart) {
+                drawChart(cdata);
+            } else {
+                if (atp && atp > 5) return;
+                setTimeout(function() {
+                    tryDrawChart(cdata, (atp || 1) + 1);
+                }, 1000);
+            }
+        }
+    </script>
+}
+@*end*@
+<br />
+<br />
+<div class="tabs">
+    <div data-caption="description" class="expl">
+        Using the awesome grid and <a href="https://developers.google.com/chart/interactive/docs/gallery/piechart">Google Pie chart</a>. <br />
+    </div>
+    <div data-caption="view">
+        @Html.Source("GridChart/Pie.cshtml")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Demos/Grid/GridChartController.cs").Action("GetData")
+    </div>
+</div>

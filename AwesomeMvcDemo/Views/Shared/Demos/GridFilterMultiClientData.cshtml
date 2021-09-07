@@ -1,0 +1,249 @@
+<h2 data-u="@Url.Action("Index", "GridFilterRowClientData")">Grid with filter row multiple editors</h2>
+
+@*begin*@
+@{
+    var clrAll = "<button type='button' class='awe-btn o-clrAll awe-clrbtn'><i class='awe-icon awe-icon-x'></i></button>";
+}
+@(Html.Awe().Grid("GridFrowMulti")
+    .CssClass("compact")
+    .Height(390)
+    .ColumnWidth(200) // default min column width
+    .Reorderable()
+    .Resizable()
+    .DataFunc("loadLunchesGridMulti")
+    .Mod(o => o.Main().FilterRow(keyupsel: ".awe-txt:not(.awe-dtp)")) // Person textbox has .awe-txt css class
+    .Columns(
+        new Column {Bind = "Id", Width = 100 }.Mod(o => o.Filter("search:")),
+
+        new Column {Bind = "Person"}
+            .Mod(o => o.Filter(Html.Awe().TextBox("Person").Placeholder("Person").ClearButton())),
+        new Column { Bind = "Price" }
+            .Mod(o => o.Filter(Html.Awe().TextBox("Price").Placeholder("Price").Numeric())
+                .Filter(Html.Awe().Odropdown("PriceOp").CssClass("o-op").DataFunc("priceOpData"))
+                .Filter(clrAll)),
+
+        new Column { Bind = "Date", ClientFormat = ".(DateStr)", Width = 230 }
+            .Mod(o => o.Filter(Html.Awe().DatePicker("Date").Placeholder("Date").ChangeYear().ChangeMonth())
+                .Filter(Html.Awe().Odropdown("DateOp").CssClass("o-op").DataFunc("dateOpData"))
+                .Filter(clrAll)),
+
+        new Column { Bind = "CountryName", Header = "Country" }
+            .Mod(o => o.Filter(type: FilterType.Multichk, valProp: "Country", clearBtn: false)
+                .Filter(Html.Awe().Odropdown("CountryOp").CssClass("o-op").DataFunc("countryOpData"))
+                .Filter(clrAll)),
+
+        new Column { ClientFormat = ".(MealsStr)", Header = "Meals", Grow = 1.7 }
+
+            // define valProp, by default Column.Bind is used (which we don't have for this column)
+            .Mod(o => o.Filter(valProp:"Meals", type: FilterType.Multiselect)),
+
+        new Column { Bind = "ChefName", Header = "Chef"}))
+<style>
+    .compact .o-op .o-cptn {
+        display: none;
+    }
+
+    .compact .awe-field.o-op {
+        width: 2em;
+        flex-shrink: 0;
+    }
+
+    /*filter row cell with value*/ 
+    .compact .o-frow td.o-hv {
+        box-shadow: inset 0 -1px 0 #b1b2b2;
+    }
+</style>
+<script>
+    function priceOpData() {
+        return [{k: '', c: 'equals'},
+            { k: '>', c: 'is greater' },
+            { k: '<', c: 'is less' }];
+    }
+
+    function dateOpData() {
+        return [{ k: '', c: 'equals' },
+            { k: '<', c: 'before' },
+            { k: '>', c: 'after' }];
+    }
+
+    function countryOpData() {
+        return [{ k: '', c: 'include' },
+            { k: 'exclude', c: 'exclude' }];
+    }
+
+    function loadLunchesGridMulti(sgp) {
+        // cache storage used by this demo (cstorg.js), it will load data on first call
+        // for no cache you can replace cstorg.get with $.get
+        return $.when(cstorg.get('@Url.Action("GetLunches", "Data")')).then(function(lunches) {
+            return getGridDataMulti(sgp, lunches);
+        });
+    }
+
+    function getGridDataMulti(sgp, lunches) {
+        var where = awef.where, select = awef.select, contains = awef.scont, loop = awef.loop;
+        var distLstFunc = utils.distLstFunc;
+        var jsonToDate = utils.toDate; // json date str to date
+        var gp = utils.getGridParams(sgp, ['country', 'meals']); // country, meals are arrays
+        var data = lunches;
+
+        // data used to populate some of the filter row dropdowns
+        var frowData = {};
+
+        // filter rules, will be applied in order ( gp.forder ),
+        // because we want to get the data for the dropdowns in order of filter application
+        var filterRules = {
+            Person: function() {
+                if (gp.person) {
+                    data = where(data, function (o) { return contains(o.Person, gp.person) });
+                }
+            },
+            Price: function() {
+                if (gp.price) {
+                    var op = function(o) { return awef.seq(o.Price, gp.price); }
+
+                    if (gp.priceOp === '>') {
+                        op = function (o) { return o.Price > gp.price; }
+                    }
+                    else if (gp.priceOp === '<') {
+                        op = function (o) { return o.Price < gp.price; }
+                    }
+
+                    data = where(data, op);
+                }
+            },
+            Date: function () {
+                if (gp.date) {
+                    var pdate = awem.toDate(gp.date); // parse str to date with datepicker default dateformat
+
+                    var op = function (o) { return jsonToDate(o.Date).valueOf() === pdate.valueOf(); }
+
+                    if (gp.dateOp === '>') {
+                        op = function(o) {
+                            return jsonToDate(o.Date) > pdate;
+                        }
+                    }
+                    else if (gp.dateOp === '<') {
+                        op = function (o) { return jsonToDate(o.Date) < pdate; }
+                    }
+
+                    data = where(data, op);
+                }
+            },
+            Meals: function() {
+                if (gp.meals) {
+                    data = where(data, function(o) {
+                        // check that each of gp.meals is present in o.Meals
+
+                        var mids = select(o.Meals, function(m) { return m.Id; });
+                        
+                        var hasAll = true;
+                        loop(gp.meals, function(mid) {
+                            hasAll = hasAll && awef.vcont(mid, mids);
+                        });
+
+                        return hasAll;
+                    });
+                }
+
+                // get data after querying this time, to filter the meals dropmenu as well
+                var distMeals = [];
+                var udict = {};
+                loop(data, function(o) {
+                    loop(o.Meals, function(m) {
+                        if (!udict[m.Id]) {
+                            distMeals.push(m);
+                            udict[m.Id] = 1;
+                        }
+                    });
+                });
+
+                frowData.Meals = select(distMeals, function(m) { return { k: m.Id, c: m.Name }; });
+            },
+            Country: function() {
+                frowData.Country = toKeyContent(distLstFunc('CountryName')(data));
+
+                if (gp.country) {
+
+                    // include
+                    var op = function(o) {
+                        var res = false;
+                        loop(gp.country,
+                            function(c) {
+                                if (c === o.CountryName) res = true;
+                            });
+
+                        return res;
+                    }
+
+                    if (gp.countryOp === 'exclude') {
+                        op = function(o) {
+                            var res = true;
+                            loop(gp.country,
+                                function(c) {
+                                    if (c === o.CountryName) res = false;
+                                });
+
+                            return res;
+                        }
+                    }
+
+                    data = where(data, op);
+                }
+            },
+            ChefName: function(){
+                frowData.ChefName = toKeyContent(distLstFunc('ChefName')(data).sort(), 'any');
+                if (gp.chefName) {
+                    data = where(data, function (o) { return o.ChefName === gp.chefName });
+                }
+            }
+        };
+
+        // apply rules in order
+        utils.applyFilters({
+            rules: filterRules,
+            gp: gp
+        });
+
+        function toKeyContent(arr, emptyn) {
+            var res = [];
+
+            if (emptyn) res.push({ k: '', c: emptyn });
+
+            awef.loop(arr, function (item) {
+                res.push({ k: item, c: item });
+            });
+
+            return res;
+        }
+
+        var model = utils.gridModelBuilder(
+            {
+                key: "Id",
+                gp: gp,
+                items: data,
+
+                // replace default group header value for Date column
+                getHeaderVal: { Date: function (o) { return o.DateStr; } },
+                tag: { frow: frowData }
+            });
+
+        return model;
+    }
+</script>
+@*end*@
+<br />
+<div class="tabs code">
+    <div class="expl" data-caption="description">
+        We can add more than one editor in one filter cell, and in this demo we added additional operator dropdowns and clear all values in cell buttons.
+        Custom css is used to make the Op dropdowns (operator equals/less than etc.) take less space in the cell.
+        <code>o-op</code> class on the dropdowns tells filter row to ignore its value for adding <code>o-hv</code> class to the cell, so if you only select a value in an op dropdown (less than/equals etc.),
+        but not in another editor in the cell (without o-op) you won't get the little box-shadow under the cell.<br/>
+        <code>o-clrAll</code> class tells the filter row that clicking on the button with this class should clear all input values in this cell.
+    </div>
+    <div data-caption="view">
+        @Html.Source("Shared/Demos/GridFilterMultiClientData.cshtml")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Awesome/DataController.cs").Action("GetLunches")
+    </div>
+</div>

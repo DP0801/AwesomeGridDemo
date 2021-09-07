@@ -1,0 +1,73 @@
+@{
+    ViewBag.Title = "Grid Infinite scrolling / endless paging";
+}
+<h1>Grid Infinite scrolling</h1>
+<br />
+<div class="example">
+    <h2>Loading data when the content is scrolled</h2>
+    @*begin*@
+    @(Html.Awe().Grid("InfiniteScrollingGrid")
+        .Mod(o => o.Main().InfiniteScroll())
+        .Columns(
+            new Column {ClientFormat = ".(Nr)", Header = "Nr", Width = 75},
+            new Column {Bind = "Id", Width = 75, Groupable = false, Resizable = false},
+            new Column {Bind = "Person"},
+            new Column {Bind = "Food"},
+            new Column {Bind = "Location"},
+            new Column {Bind = "Date", Width = 120},
+            new Column {Bind = "Country.Name", Prop = "CountryName", Header = "Country"},
+            new Column {Bind = "Chef.FirstName,Chef.LastName", Prop = "ChefName", Header = "Chef"})
+        .Url(Url.Action("GetItems"))
+        .Resizable()
+        .Reorderable()
+        .Height(400))
+    @*end*@
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Grid with infinite/endless scroll. Scrolling down or up from a certain page will automatically load the next/previous page.
+            If you scroll faster you can skip several pages.<br/>
+            For group aggregates GridModelBuilder.MakeHeader needs to ignore the group items (GroupInfo.Items) and call the data source directly to calculate aggregate values,
+            otherwise the values will be calculated only on the items present in the current page.
+        </div>
+        <div data-caption="view">@Html.Source("GridInfiniteScrollingDemo/Index.cshtml")</div>
+        <div data-caption="controller">@Html.Code("Demos/Grid/GridInfiniteScrollingDemoController.cs")</div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid with load more button</h2>
+    @*beginm*@
+    @(Html.Awe().Grid("GridLoadMore")
+        .Mod(o => o.Main().InfiniteScroll(true))
+        .Columns(
+            new Column {ClientFormat = ".(Nr)", Header = "Nr", Width = 75},
+            new Column {Bind = "Id", Width = 75, Groupable = false, Resizable = false},
+            new Column {Bind = "Person"},
+            new Column {Bind = "Food"},
+            new Column {Bind = "Location"},
+            new Column {Bind = "Date", Width = 120},
+            new Column {Bind = "Country.Name", Prop = "CountryName", Header = "Country"},
+            new Column {Bind = "Chef.FirstName,Chef.LastName", Prop = "ChefName", Header = "Chef"})
+        .Url(Url.Action("GetItems"))
+        .Resizable()
+        .Reorderable()
+        .Height(400)
+        .PageSize(10))
+    @*endm*@
+
+    <script>
+        $(function() {
+            $('#gmHeight').change(function() {
+                awem.setgh($('#GridLoadMore'), $(this).val() === 'true' ? 400 : 0);
+            });
+        })
+    </script>
+    
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Instead of loading the next page on scroll a Load more data button is provided.<br/><br/>
+            <label>Defined height: @Html.Awe().CheckBox("gmHeight").Otoggl().Value(true)</label>
+        </div>
+        <div data-caption="view">@Html.Source("GridInfiniteScrollingDemo/Index.cshtml", "m")</div>
+    </div>
+</div>

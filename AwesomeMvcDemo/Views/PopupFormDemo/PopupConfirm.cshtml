@@ -1,0 +1,8 @@
+@model AwesomeMvcDemo.ViewModels.Input.PopupConfirmInput
+@using (Html.BeginForm())
+{
+    using (Html.Awe().BeginContext())
+    {
+        @Html.EditorFor(o => o.Name)
+    }
+}

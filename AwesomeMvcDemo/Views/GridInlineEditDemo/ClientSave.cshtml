@@ -1,0 +1,158 @@
+@model DinnerInput
+@using AwesomeMvcDemo.ViewModels.Input
+@{
+    ViewBag.Title = "Grid inline editing Client side Save";
+}
+
+<h1>Grid inline editing Client Save</h1>
+
+<div class="example">
+    <h2>Save client side</h2>
+    @*begin*@
+    @{
+        var gid = "GridClientSave";
+    }
+    <div class="bar">
+        @Html.InlineCreateButtonForGrid(gid)
+    </div>
+    @(Html.Awe().Grid(gid)
+        .DataFunc("getData")
+        .Height(370)
+        .Mod(o => o.InlineEdit(clientOpt: "clientOpt", rowClickEdit:true))
+        .Columns(
+            new Column{ Bind = "Id", Width = 100}
+                .Mod(o => o.InlineId()),
+
+            new Column{ Bind = "Name"}
+                .Mod(o => o.Inline(Html.Awe().TextBox("Name"))),
+
+            new Column { Bind = "BonusMealName", ClientFormat = ".(BonusMeal)", Header = "Bonus Meal" }
+                .Mod(o => o.Inline(
+                    Html.Awe().AjaxRadioList("BonusMealId")
+                        .Odropdown()
+                        .Url(Url.Action("GetMealsImg", "Data")), "BonusMealId")),
+
+            new Column{ Bind = "Organic", Width = 120, ClientFormat = ".(OrganicDisplay)"}
+                .Mod(o => o.Inline(Html.Awe().CheckBox("Organic").Otoggl())),
+
+            new Column
+            {
+                // o-glh - hidden when editing, o-gl - hidden when not editing
+                ClientFormat = "<button type='button' class='awe-btn o-glbtn o-glh' onclick='openDelPopup(\".(Id)\")'>delete</button>" + Html.InlineCancelBtn(),
+                CssClass = "o-glnon", // clicking the cell won't go to edit
+                Width = 100
+            },
+
+
+            new Column { ClientFormat = ".(State)", Header = "State", Width = 100 }
+        ))
+
+    <script>
+        var dinners;
+        var meals;
+        var cid = 1;
+        var clientOpt = {
+            save: function(values) {
+                var input = utils.serializeObj(values);
+                var din;
+                if (input.Id) {
+                    din = awef.where(dinners, function(o) { return o.Id.toString() === input.Id })[0];
+                    din.Changed = true; // changed on the client
+                } else {
+                    // new
+                    din = { New: true, Id: 't' + cid++ };
+                    dinners.push(din);
+                }
+
+                din.Name = input.Name;
+                din.Organic = input.Organic === 'true';
+                din.BonusMealId = input.BonusMealId;
+                var mealName = awef.where(meals, function(m) { return m.k === input.BonusMealId })[0].c;
+                din.BonusMealName = mealName;
+
+                return { Item: mapDinner(din) };
+            }
+        };
+
+        function getData(sgp) {
+            if (dinners) return getGridData(sgp, dinners);
+            return $.when($.get('@Url.Action("GetDinners", "Data")'),
+                    cstorg.get('@Url.Action("GetMealsImg", "Data")'))
+                .then(function(res, res2) {
+                    dinners = res[0];
+                    meals = res2;
+                    return getGridData(sgp, dinners);
+                });
+        }
+
+        function getGridData(sgp, items) {
+            var gp = utils.getGridParams(sgp);
+            var list = awef.where(items, function(d) { return !d.IsDeleted; });
+
+            var model = utils.gridModelBuilder(
+                {
+                    key:"Id",
+                    gp: gp,
+                    items: list,
+                    map: mapDinner,
+                    // replace default group header value for Date
+                    getHeaderVal:{ Date: function(o){ return o.DateStr; } }
+                });
+            return model;
+        }
+
+        function mapDinner(o) {
+            return {
+                Id: o.Id,
+                Name: o.Name,
+                Organic: o.Organic,
+                OrganicDisplay: o.Organic ? 'Yes' : 'No',
+                BonusMealId: o.BonusMealId,
+                BonusMeal: o.BonusMealName,
+                State: o.New ? 'new' : o.Changed ? 'changed' : ''
+            };
+        };
+
+        function openDelPopup(id) {
+            var din = awef.where(dinners, function (d) { return d.Id.toString() === id })[0];
+            awe.open("confirmDelCs",
+                {
+                    modal: true,
+                    height: 200,
+                    width: 700,
+                    title: 'please confirm',
+                    setCont: function(sp, o) {
+                        var cont = $('<div style="padding: 0 3em;">Are you sure you want to delete dinner: ' + din.Name + '? </div>');
+                        o.scon.html(cont);
+                    },
+                    btns: [{
+                            text: 'Yes',
+                            ok:1, // add okbtn class
+                            action: function() {
+                                din.IsDeleted = true;
+                                $(this).data('api').close();
+                                utils.itemDeleted('@gid')({ Id: id });
+                            } },
+                            {
+                            text: 'No',
+                            action: function() {
+                                $(this).data('api').close();
+                            } }
+                    ]
+                });
+        }
+    </script>
+
+    @*grid client validation (for MVC5 must be placed in a cshtml with @model DinnerInput)*@
+    @(Html.BindOVld<DinnerInput>("#GridClientSave"))
+    @*end*@
+    <br />
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Saving all the data (new items, changes, deleted items) on the client.<br />
+            Using <code>rowClickEdit</code> instead of adding an edit button (you could add edit buttons instead like in other demos). <br />
+            In case of validation errors grid loading will be prevented (happens when rowClickEdit: true).
+        </div>
+        <div data-caption="view">@Html.Source("GridInlineEditDemo/ClientSave.cshtml")</div>
+    </div>
+</div>

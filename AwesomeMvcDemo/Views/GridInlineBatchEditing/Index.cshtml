@@ -1,0 +1,76 @@
+@model DinnerInput
+@using AwesomeMvcDemo.Models
+@using AwesomeMvcDemo.ViewModels.Input
+@{
+    ViewBag.Title = "Grid inline batch editing";
+}
+
+<h1>Batch save inline editing grid</h1>
+
+<div class="example">
+    <h2>Edit on row click and batch save</h2>
+    @*begin2*@
+    @{
+        var grid2Id = "DinnersGrid2";
+        var initObj = new
+        {
+            Name = DemoUtils.RndName(),
+            Date = DateTime.Now.ToShortDateString(),
+            ChefId = Db.Chefs.First().Id,
+            MealsIds = Db.Meals.Take(2).Select(o => o.Id).ToArray()
+        };
+    }
+    <div class="bar">
+        <div style="float: right;">
+            @Html.Awe().TextBox("txtSearch2").Placeholder("search...").CssClass("searchtxt")
+        </div>
+        <button type="button" onclick="$('#@grid2Id').data('api').inlineCreate()" class="awe-btn">Create</button>
+        @Html.InlineCreateButtonForGrid(grid2Id, initObj, "Create with predefined values")
+        <button type="button" onclick="$('#@grid2Id').data('api').batchSave()" class="awe-btn">Save All</button>
+        <button type="button" onclick="$('#@grid2Id').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
+    </div>
+
+    @Html.InitDeletePopupForGrid(grid2Id, "GridInlineEditDemo")
+
+    @(Html.Awe().Grid(grid2Id)
+      .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave"))) //, rowClickEdit:false
+      .Url(Url.Action("GridGetData"))      
+      .Parent("txtSearch2", "search")
+      .Height(350)
+      .Resizable()
+      .Reorderable()
+      .Attr("data-syncg", "dinner")
+      .Columns(
+          new Column { Bind = "Id", Width = 75 }
+          .Mod(o => o.InlineId()),
+
+          new Column { Bind = "ProgramID" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("ProgramID")).Filter(Html.Awe().TextBox("ProgramID").Placeholder("ProgramID").ClearButton())),
+           
+           new Column { Bind = "ProgramName" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("ProgramName")).Filter(Html.Awe().TextBox("ProgramName").Placeholder("ProgramName").ClearButton())),
+
+           new Column { Bind = "Key" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Key")).Filter(Html.Awe().TextBox("Key").Placeholder("Key").ClearButton())),
+
+           new Column { Bind = "Value" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Value")).Filter(Html.Awe().TextBox("Value").Placeholder("Value").ClearButton())),
+            
+          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 80 },
+          new Column { ClientFormat = Html.InlineDeleteFormatForGrid(grid2Id), Width = 85 }))
+    
+    @*grid client validation (for MVC5 must be placed in a cshtml with @model DinnerInput)*@
+    @(Html.BindOVld<DinnerInput>("#" + grid2Id))
+    @*end2*@
+    <br />
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Grid inline editing with batch save.
+            Edit on row click, and save by clicking the save all button on top. <br />
+            Save can be performed either for each row individually by clicking the row save button, for all at once using the "Save all" button. <br />
+            You can turn off edit on row click by setting <code>rowClickEdit: false</code> (like in the inline editing demos).
+        </div>
+        <div data-caption="view">@Html.Source("GridInlineBatchEditing/Index.cshtml", "2")</div>
+        <div data-caption="controller">@Html.Code("Demos/Grid/GridInlineBatchEditingController.cs")</div>
+    </div>
+</div>

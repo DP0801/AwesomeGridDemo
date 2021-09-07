@@ -1,0 +1,60 @@
+@{
+    ViewBag.Title = "Grid CRUD using Popup Demo";
+}
+
+<div class="example">
+    @Html.Partial("Demos/GridCrud")
+</div>
+<div class="example">
+    <h2>Grid Crud inline popup</h2>
+    @*begininline*@
+    @{
+        var gid1 = "GridInline1";
+    }
+    @Html.InitCrudPopupsForGrid(gid1, "DinnersGridCrud", inlineContId: "inlCont1")
+
+    <div class="bar">
+        <div style="float: right;">
+            @Html.Awe().TextBox("txtSearch1").Placeholder("search...").CssClass("searchtxt")
+        </div>
+
+        @(Html.Awe().Button()
+          .Text("Create")
+          .OnClick(Html.Awe().OpenPopup("create" + gid1)))
+    </div>
+
+    @(Html.Awe().Grid(gid1)
+    .Mod(o => o.Main())
+    .Url(Url.Action("GridGetItems", "DinnersGridCrud"))
+    .Parent("txtSearch1", "search")
+    .Attr("data-syncg", "dinner")
+    .Height(350)
+    .Columns(
+        new Column { Bind = "Id", Width = 75 },
+        new Column { Bind = "Name" }.Mod(o => o.Nohide()),
+        new Column { Bind = "Date" },
+        new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef" },
+        new Column { ClientFormat = ".(Meals)", Header = "Meals", Grow = 2, MinWidth = 200 },
+        new Column { Bind = "BonusMeal.Name", ClientFormat = ".(BonusMeal)", Header = "Bonus Meal"},
+        new Column { ClientFormat = Html.EditFormatForGrid(gid1), Width = 55 }.Mod(o => o.Nohide()),
+        new Column { ClientFormat = Html.DeleteFormatForGrid(gid1), Width = 55 }.Mod(o => o.Nohide())))
+
+    <script>
+        $(function () {
+            var inlc = $('#inlCont1');
+            inlc.on('aweopen', function () {
+                awe.flash(inlc);
+            });
+        });
+    </script>
+
+    <div id="inlCont1"></div>
+    @*endinline*@
+
+    <div class="tabs code">
+        <div data-caption="description" class="expl">
+            Crud popups are open inline, inside a div identified by id.
+        </div>
+        <div data-caption="view">@Html.Source("GridCrudDemo/Index.cshtml", "inline")</div>
+    </div>
+</div>

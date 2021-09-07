@@ -1,0 +1,36 @@
+@{
+    ViewBag.Title = "Grid with list count property column";
+}
+
+<h1>Grid with list count property column</h1>
+@*begin*@
+@(Html.Awe().Grid("Grid1")
+    .Columns(
+        new Column { Bind = "Id", Width = 75, Groupable = false, Resizable = false },
+        new Column { Bind = "Person" },
+        new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 },
+        new Column { Bind = "MealsCount" },
+        new Column { Bind = "MealsCount", ClientFormat = ".(MealsStr)", Header = "Meals"},
+        new Column { Bind = "Location" })
+    .Url(Url.Action("GetItems"))
+    .Height(350)
+    .Reorderable()
+    .Resizable())
+@*end*@
+<br/>
+
+<div class="tabs">
+    <div data-caption="description" class="expl">
+        In this demo we show how you can have a count property in the grid, while also being able to sort and group by that property.<br />
+        For this to work you need to add a get only property to your Entity (Lunch in our case <code>public int MealsCount => Meals.Count();</code>),
+        after this you can use the count property as any other property.
+        <br/>
+        However if you're using EntityFramework you'll also need to set the <code>OrderByFunc</code> on the <code>GridModelBuilder</code>.
+    </div>
+    <div data-caption="view">
+        @Html.Source("GridWithListCountColumn/Index.cshtml")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Demos/Grid/GridWithListCountColumnController.cs")
+    </div>
+</div>

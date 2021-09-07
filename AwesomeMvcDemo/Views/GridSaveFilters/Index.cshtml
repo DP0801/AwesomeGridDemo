@@ -1,0 +1,132 @@
+@{
+    ViewBag.Title = "Grid filtering save/persist filter values";
+}
+
+<h1>Grid save filter values</h1>
+
+<h2>Filter grid using parent controls, save filters to session storage</h2>
+<div class="example">
+    @*begin*@
+    <div class="bar" id="bar1">
+        @Html.Awe().TextBox("txtPerson").Placeholder("search for person ...").Value("Le").CssClass("searchtxt")
+        @Html.Awe().TextBox("txtFood").Placeholder("search for food ...").CssClass("searchtxt")
+        @Html.Awe().AjaxRadioList("selCountry").Url(Url.Action("GetCountries", "Data")).Odropdown()
+        <button type="button" class="awe-btn" id="btnClearFlt"> Clear filters </button>
+    </div>
+
+    <script>
+        $(function () {
+            var key = "Grid1-Flt";
+            var cont = $('#bar1');
+
+            // load filters
+            var strval = sessionStorage[key];
+            var fltData = strval ? JSON.parse(strval) : {};
+            
+            cont.find('input[name]').each(function () {
+                var el = $(this);
+                var name = el.attr('name');
+                el.val(fltData[name]).change();
+            });
+
+            // save filter
+            cont.on('change', function (e) {
+                var el = $(e.target);
+                var name = el.attr('name');
+                if (!name) return;
+                fltData[name] = el.val();
+                sessionStorage[key] = JSON.stringify(fltData);
+            });
+
+            // clear filters
+            $('#btnClearFlt').click(function() {
+                var go = $('#Grid1').data('o');
+                go.load = 0; // pause grid loading
+                cont.find('input[name]').each(function() {
+                    $(this).val('').change();
+                });
+                go.load = 1;
+                go.api.load();
+            });
+        });
+    </script>
+    
+    @(Html.Awe().Grid("Grid1")
+        .Mod(o => o.Main())
+        .Url(Url.Action("GetItems", "LunchGrid"))
+        .Columns(
+            new Column { Bind = "Id", Width = 75, Groupable = false, Resizable = false },
+            new Column { Bind = "Person" },
+            new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 },
+            new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" },
+            new Column { Bind = "Date", Width = 120 }.Mod(o => o.Autohide()),
+            new Column { Bind = "Location" }.Mod(o => o.Autohide()),
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef" })
+        .Reorderable()
+        .Resizable()
+        .Height(350)
+        .Parent("txtPerson", "person")
+        .Parent("txtFood", "food")
+        .Parent("selCountry", "country"))
+    @*end*@
+    <br />
+    <div class="tabs">
+        <div data-caption="description" class="expl">
+            Saving grid filters to the sessionStorage, you can change the filters and refresh the page, the filters will remain the same. <br/>
+            Instead of sessionStorage you could use localStorage or use ajax to save the filters on the server in a database.
+        </div>
+        <div data-caption="view">
+            @Html.Source("GridSaveFilters/Index.cshtml")
+        </div>
+    </div>
+</div>
+
+<div class="example">
+    <h2>Grid filter row, save filters to session storage</h2>
+
+    @*beginssf*@
+    @(Html.Awe().Grid("GridFrow2")
+        .Height(390)
+        .Reorderable()
+        .Resizable()
+        .Url(Url.Action("LunchFilterGrid", "GridFilterRowServerSideData"))
+        .Mod(o => o.Main().ColumnsAutohide().FilterRow().Custom("persistFilter"))
+        .Columns(
+            new Column {Bind = "Id", Width = 100 }.Mod(o => o.Filter("search:")),
+
+            new Column {Bind = "Person"}
+                .Mod(o => o.Filter(Html.Awe().TextBox("Person").Placeholder("Person").ClearButton())),
+
+            new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 }
+                .Mod(o => o.Filter(
+                    Html.Awe().AjaxRadioList("Food")
+                        .DataFunc("utils.frowData('Food')")
+                        .Odropdown(d => d.ItemFunc("site.imgFoodItem")
+                            .CaptionFunc("site.imgFoodCaption")
+                            .ClearBtn()))),
+
+            new Column { Bind = "Date", ClientFormat = ".(DateStr)", Width = 170 },
+
+            new Column { Bind = "Country.Name", ClientFormat = ".(CountryName)", Header = "Country" }
+                .Mod(o => o.Filter(valProp: "Country")), // frow.Country contains the data for the Country dropdown (by default frow.Bind is used)
+            // also action parameter name will be "Country", as defined in valProp
+
+            new Column { ClientFormat = ".(MealsStr)", MinWidth = 200, Header = "Meals", Grow = 1.7 }
+                .Mod(o => o.Filter(valProp: "Meals", type: FilterType.Multiselect)), // take filter editor data from frow.Meals
+
+            new Column { Bind = "Chef.FirstName,Chef.LastName", ClientFormat = ".(ChefName)", Header = "Chef"}
+                .Mod(o => o.Filter(valProp:"Chef"))))
+    
+    <script src="~/Scripts/persistFrow.js"></script>
+    @*endssf*@
+    <br />
+    <div class="tabs">
+        <div class="expl" data-caption="description">
+            Saving the filter row editors values to session storage, after page refresh the filters will remain the same.<br/>
+            Using <code>persistFilter</code> custom grid mod.
+        </div>
+        <div data-caption="view">
+            @Html.Source("GridSaveFilters/Index.cshtml", "ssf")
+        </div>
+    </div>
+</div>

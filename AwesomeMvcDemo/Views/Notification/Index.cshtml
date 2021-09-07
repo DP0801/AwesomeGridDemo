@@ -1,0 +1,17 @@
+@{
+    ViewBag.Title = "Notification control";
+}
+
+<h1>Notification</h1>
+
+@*begin*@
+<button type="button" class="awe-btn awe-btnp" onclick="awem.notif('Hi,</br> how are you ! ', 5000)">Show Notification</button>
+<button type="button" class="awe-btn redbtn" onclick="awem.notif('<h5>Oops !</h5> error example ', 0, 'o-err')">Show Error</button>
+<button type="button" class="awe-btn" onclick="awe.flash($(this).parent())">Flash</button>
+<button type="button" class="awe-btn" onclick="awe.flash(awem.notif('Hi,</br> how are you ! ', 5000))">Flash Notify</button>
+@*end*@
+<br/>
+<br/>
+<div class="tabs">
+    <div data-caption="view">@Html.Source("Notification/Index.cshtml")</div>
+</div>

@@ -1,0 +1,299 @@
+<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">Grid outside filter row and custom render</h2>
+@*beginofr*@
+@{
+    var pref = "frowOut";
+    var gridId = "GridFrowOut";
+}
+<div class="bar">
+    <div style="float: right;">
+        @Html.Awe().TextBox("txtSearch2").Placeholder("search...").CssClass("searchtxt")
+    </div>
+    <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>     
+    <button type="button" onclick="$('#@gridId').data('api').batchSave()" class="awe-btn">Save All</button>
+    <button type="button" onclick="$('#@gridId').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
+</div>
+<div id="outfrow" class="frowpnl awe-il" style="margin-right: 1em">
+    @*context will add a prefix to all awesome editors html ids*@
+    @using (Html.Awe().BeginContext(pref))
+    {
+        @*html input name matches filter rule name*@
+        <label>
+            ProgramID:<br /> @Html.Awe().TextBox("ProgramID").ClearButton().Placeholder("ProgramID")
+        </label>
+        <label>
+            ProgramName:<br /> @Html.Awe().TextBox("ProgramName").ClearButton().Placeholder("ProgramName")
+        </label>
+        <label>
+            Key:<br /> @Html.Awe().TextBox("Key").ClearButton().Placeholder("Key")
+        </label>
+        <label>
+            Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
+        </label>
+        @*<label>
+                Year:<br /> @Html.Awe().Odropdown("Date", o => o.ClearBtn()).DataFunc("filterData('Date')")
+            </label>
+            <label>
+                Meals:<br />
+                @(Html.Awe().AjaxCheckboxList("Meal")
+                    .Multichk(o => o.ClearBtn())
+                    .DataFunc("filterData('Meal')"))
+            </label>
+            <label>
+                Organic:<br /> @Html.Awe().Odropdown("Organic", o => o.ClearBtn()).DataFunc("filterData('Organic')")
+            </label>
+            <label style="margin-right: 1em;">
+                <span> </span><br />
+                <button type="button" id="btnClearFilter" class="awe-btn">Clear filters</button>
+            </label>*@
+    }
+
+    <label class="nonflt">
+        <span>Show items as:</span> <br />
+        @Html.Awe().CheckBox("itemsType").Otoggl(o => o.No("Rows").Yes("Custom").Width("7em"))
+    </label>
+</div>
+
+@(Html.Awe().Grid(gridId)
+    .Url(Url.Action("DinnersFilterGrid", "GridFilterRowServerSideData"))
+    .Height(350)
+    .Reorderable()
+    //.Mod(o => o.Main().Custom("outsideFilter"))
+    .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))
+    .Columns(
+          new Column { Bind = "Id", Width = 75 }
+          .Mod(o => o.InlineId()),
+
+          new Column { Bind = "ProgramID" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("ProgramID"))),
+
+           new Column { Bind = "ProgramName" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("ProgramName"))),
+
+           new Column { Bind = "Key" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Key"))),
+
+           new Column { Bind = "Value" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Value"))),
+
+           new Column { Bind = "IsActive" }
+            .Mod(o => o.Inline(Html.Awe().CheckBox("IsActive"))),
+
+          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 80 },
+          new Column { ClientFormat = Html.InlineCancelBtn(), Width = 85 }))
+
+<script>
+    // outside filter row custom mod
+    function outsideFilter(o) {
+        var g = o.v;
+        var fcont = $('#outfrow');
+        var opt = { model: {} };
+        o.fltopt = opt;
+
+        // reload each filter control when grid loads
+        g.on('aweload', function () {
+            $('#outfrow .awe-val').each(function () {
+                var api = $(this).data('api');
+                api && api.load && api.load();
+            });
+        });
+
+        // apply filters on control change
+        fcont.on('change', function (e) {
+            opt.inp = fcont.find('input').not('.nonflt input');
+            // instead of opt.inp we could set opt.cont = fcont; but this will also include the itemsType input
+            // and the grid would reload when we change the items type also
+
+            awem.loadgflt(o);
+        });
+
+        $('#btnClearFilter').on('click', function () {
+            fcont.find('.awe-val').not('.nonflt input').each(function () {
+                var it = $(this).val('');
+                var api = it.data('api');
+                api && api.render && api.render();
+                // call api.render instead of change to load the grid only once
+            });
+
+            opt.inp = fcont.find('input').not('.nonflt input');
+
+            awem.loadgflt(o);
+        });
+
+        // keep same filter editors values after page refresh
+
+        var fkey = 'persFout' + o.id;
+        var storage = sessionStorage;
+        var pref = '@pref';
+
+        g.on('awefinit', function () {
+            var fopt = storage[fkey];
+            if (fopt) {
+                fopt = JSON.parse(fopt, function(key, val) {
+                    if(val && val.length > 0 && val[0] === '[')
+                    {
+                        return JSON.parse(val);
+                    }
+
+                    return val;
+                });
+
+                if (fopt.model) {
+                    o.fltopt.model = fopt.model;
+                    o.fltopt.order = fopt.order;
+
+                    // set persisted model filter params
+                    var res = awef.serlObj(fopt.model);
+                    res = res.concat(awef.serlArr(fopt.order, 'forder'));
+                    o.fparams = res;
+                    var model = fopt.model;
+
+                    g.one('aweload', function() {
+                        for (var prop in model) {
+                            var editor = $('#' + pref + prop);
+                            if (editor.length) {
+                                editor.val(awef.sval(model[prop]));
+                                if (editor.closest('.awe-txt-field')) {
+                                    editor.data('api').render();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            g.on('aweload', function (e) {
+                if ($(e.target).is(g)) {
+                    fopt = o.fltopt;
+                    storage[fkey] = JSON.stringify({ model: fopt.model, order: fopt.order });
+                }
+            });
+        });
+    }
+
+    // get data for filter editor from grid model
+    function filterData(name) {
+        return function () {
+            var g = $('#@gridId');
+            var o = g.data('o');
+            return awem.frowData(o, name);
+        }
+    }
+</script>
+<script>
+    $(function() {
+        // rows/custom render switch
+        $('#itemsType').on('change', function () {
+            changeItms($('#@gridId').data('o'), $(this).val() === 'true');
+        });
+    });
+
+    // switch between rows and custom items render
+    function changeItms(o, custom) {
+        var api = o.api;
+
+        if (!o.initRen) {
+
+            o.initRen = {
+                ncon: api.ncon,
+                ghead: api.ghead,
+                itmf: api.itmf
+            };
+        }
+
+        var custview = {
+            // node content add wrap for padding
+            ncon: function (p) {
+                if (!p.lvl) return p.ren();
+                return '<div style="padding-left:' + p.lvl + 'em;" >' + p.ren() + '</div>';
+            },
+
+            // group header content
+            ghead: function (g) {
+                return api.ceb() + g.c;
+            },
+
+            // render item
+            itmf: function (opt) {
+                var columns = o.columns;
+
+                var content = '';
+                if (opt.con) {
+                    content = opt.con;
+                } else {
+                    for (var i = 0; i < columns.length; i++) {
+                        var col = columns[i];
+
+                        // is column hidden
+                        if (api.ich(col)) continue;
+                        content += '<div class="elabel">' + (col.H ? col.H + ': ' : '') + '</div>' + utils.gcvw(api, col, opt) + '</br>';
+                    }
+                }
+
+                if (opt.ceb) {
+                    opt.clss += ' cardhead';
+                    opt.style += 'margin-left:' + opt.ind + 'em;';
+                } else {
+                    opt.clss += ' itcard';
+                }
+
+                var attr = opt.attr;
+                attr += ' class="' + opt.clss + '"';
+                opt.style && (attr += ' style="' + opt.style + '"');
+
+                return '<div ' + attr + '>' + content + '</div>';
+            }
+        };
+
+        var tableCon = '<table class="awe-table"><colgroup></colgroup><tbody class="awe-tbody awe-itc"></tbody></table>';
+        var itmCon = '<div class="awe-itc"></div>';
+
+        if (custom) {
+            o.v.find('.awe-tablw').html(itmCon);
+            api = $.extend(api, custview);
+            // ignore columns width for grid content
+            o.syncon = 0;
+
+            // no alt rows
+            o.alt = 0;
+
+            // no fixed height
+            o.h = 0;
+        } else {
+            o.v.find('.awe-tablw').html(tableCon);
+            api = $.extend(api, o.initRen);
+            o.syncon = 1;
+            o.alt = 1;
+            o.h = 350;
+        }
+
+        o.api.initLayout();
+        o.api.render();
+    }
+</script>
+
+<style>
+    .frowpnl {
+        padding: 1em 0;
+    }
+
+        .frowpnl label {
+            vertical-align: middle;
+            max-width: 20em;
+        }
+</style>
+@*endofr*@
+<br />
+<div class="tabs">
+    <div class="expl" data-caption="description">
+        Reusing the same data source (url) as for the Grid with filter row (server side data), except in this demo we're using the controls outside of the grid to filter the demo. <br />
+        Just like in the filter row demos the filter controls get their data from the grid model.<br />
+        Additionally there is filter persistence, so after page refresh the grid will have the same filters applied. <br />
+        And there's a custom item render mod applied so you can switch between cards view and rows.
+    </div>
+    <div data-caption="view">
+        @Html.Source("Shared/Demos/GridFilterOutside.cshtml", "ofr")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Demos/Grid/GridFilterRowServerSideDataController.cs").Action("DinnersFilterGrid")
+    </div>
+</div>

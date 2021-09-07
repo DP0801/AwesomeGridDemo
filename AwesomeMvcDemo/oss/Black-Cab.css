@@ -1,0 +1,438 @@
+/*black-cab*/
+var col1 = #445869;
+var bordrad1 = 3px;
+var bordrad2 = 2px;
+var bordradg = 2px;
+var bordraded = 2px;
+var bg1 = #3D4A5A;
+var bg2 = #506073;
+var background-disabled = #526677;
+var bgeditor = var.bg2;
+var bgpop = var(col1);
+var bgmodal = #5A849C;
+var awelipad = 5px;
+var rowlineh = 1.7em;
+var hghlcolor = #82A6BA;
+var mcolor = #F8F9F5;
+var mbrdcolor = #303948;
+var brd2-color = var.mbrdcolor;
+var clrbrdcol = gray;
+var color-disb-caret = var.clrbrdcol;
+var color-disb-text = var.mbrdcolor;
+var clrdis = var.clrbrdcol;
+var lbrdcolor = #303948;
+var bgli = #485769;
+var bgg = #405364;
+var bg-grid-cont = var(bgli);
+var outlselli = #92B7C9;
+var btnbrdcolor = #2B3443;
+var gbarcolor = #ccc;
+var bglkpsel = var.bgmodal;
+var grid-cell-side-border = 1px solid var.mbrdcolor;
+var clscolor = var.mcolor;
+var bgspincont = rgba(242, 240, 240, 0.05);
+var colcolor = var.mcolor;
+var sidebtnw = 2.3em;
+var txtsidepad = .75em;
+var cecolor = #cbd0dc;
+var list-border = 1px solid var.mbrdcolor;
+var rgday-col = #5A849C;
+
+var aweli = {
+	border-bottom: 1px solid var.lbrdcolor;
+};
+
+var gfooter = {
+	border-top: 1px solid var.btnbrdcolor;
+};
+
+var bg-sel = {};
+
+var awe-grid = {
+	border: 1px solid var(brd2-color);
+};
+
+var ocaret = {
+	margin-left: -4px;
+    border-top: 4px solid;
+    border-right: 4px solid rgba(0, 0, 0, 0);
+    border-left: 4px solid rgba(0, 0, 0, 0);    
+    margin-top: -2px;
+	color: inherit;
+};
+
+var odd-btn-awefocus = {
+	@inherit awebtnfocus;
+};
+
+var add = {
+	padding: .375em .75em;
+	border: 1px solid #ced4da;
+};
+
+var ajxltd = {
+	border-bottom: var.grid-cell-side-border;
+};
+
+var ajxlthead = {
+	color: var.mcolor;
+    background-color: var.bg1;
+};
+
+var btnp = {};
+
+var btnphover = {};
+
+var btnpfocus = {};
+
+var btnpactive = {};
+
+var btn = {
+	border: 1px solid var.btnbrdcolor;
+    background-image: linear-gradient(to bottom, #55697A 0, #435060 100%);
+    background-color: var(col1);
+    border-radius: 3px;
+    color: var.mcolor;
+};
+
+var btnhover = {
+	background-image: linear-gradient(to bottom, #65798a 0, #536070 100%);
+	background-color: #435060;
+};
+
+var btnfocus = {
+	outline: 0;
+    border-color: #2196F3;
+    box-shadow: 0 0 3px 2px #607D8B;
+};
+
+var btnactive = {
+	background-image: linear-gradient(to bottom, #5A697A 0, var(col1) 100%);
+	background-color: var(col1);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+};
+
+var btnsel = {
+	box-shadow: inset 0 0 2px #040404;
+	background-color: #CBD0DC;
+	background-image: none;
+	color: #303948;
+	text-shadow: 0 0 3px #92B7C9;
+};
+
+var btnselspin = {
+	color: var.mcolor;
+	background-image: linear-gradient(to bottom, #5A697A 0, var(col1) 100%);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+};
+
+var btndis = {};
+
+var morebtn = {};
+
+var morebtnhover = {};
+
+var okbtnblock = {};
+var icon2 = awe_icons.png;
+
+var reloadico = {};
+
+var gridheader = {
+	background-image: linear-gradient(to bottom, var(col1) 0, #3a4958 100%);
+    background-color: #2D3D4D;
+};
+
+var highlight = {};
+
+var gbarcol = {
+	background: linear-gradient(to bottom, var(col1) 0, #2D3D4D 100%);
+};
+
+var highlightgroupbar = {
+	background-color: var(col1) !important;
+	color: white !important;
+};
+
+var awetxt = {
+	border: 1px solid #303948;
+    background: #506073;
+};
+
+var awetxtfocus = {
+	outline: 0;
+	box-shadow: 0 0 0 0.2em rgba(0, 123, 255, .25);
+    border-color: #80bdff;
+};
+
+var chkfocus = {};
+
+var awetxtdis = {
+	background: var(col1);
+	border-color: #3d434a;
+};
+
+var txtplaceholder = {
+	color: rgb(159, 170, 175);
+};
+
+var placeholder = {
+	color: rgb(223 229 231);
+};
+
+var tabbtn = {
+	background-color: var(col1);    
+    border-bottom: none;
+    color: white;
+};
+
+var tabfocus = {};
+
+var tabactive = {
+	background-color: #5A849C;
+};
+
+var btngarw = {};
+
+var buttongroup-btn = {
+	font-size: .9em;
+};
+
+var buttongroup-btn-hover = {};
+
+var buttongroup-btn-selected = {};
+
+var buttongroup-btn-focus = {};
+
+var btngactive = {
+	@inherit awebtnsel;
+};
+
+var omenu = {
+	border: 1px solid var.mbrdcolor;
+    background: var(col1);
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+	color: var.mcolor;
+};
+var oobrdcolor = #92B7C9;
+
+var oitm = {
+	line-height: 3em;
+};
+
+var itmfocus = {
+	background-color: #5A849C;
+	color: var.mcolor;
+};
+
+var itmsel = {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAKCAYAAACwoK7bAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sLHAoBFjlqnrwAAACUSURBVCjPrdMhCgJREAbgXRU0eARPICyYPYZ9BU9g9QQG7YJNzAoW72Db5B2MJoMgn8EHLiuG1ffH4fHBzJtJkojBGBfkMdGZV7axwBTzgJ7RjYWuAnpDvy6QIavUGth4J6+LdnDCDqNQa2JfQte/tjzAHQ8scSyhBdr/zHPqM1f0YnzWogIPkcZar0M4ggla3949AREf0AnV0H4LAAAAAElFTkSuQmCC) no-repeat left center rgba(0, 0, 0, 0);
+};
+
+var itmselfocus = {
+	background-color: #5A849C;
+};
+
+var itmfoccei = {};
+
+var itm-foc-arw = {};
+
+var obtn = {};
+
+var obtnhover = {};
+
+var obtnfocus = {};
+
+var obtnactive = {};
+
+var ddbtnactive = {};
+
+var igmenu = {};
+
+var igmenusel = {};
+
+var cbxbtnfocus = {};
+
+var cbxbtnslbtn = {};
+
+var phdr = {};
+
+var ophdrocls = {
+	padding: .5em 1em;
+    font-size: 1.4em;
+};
+
+var optitl = {
+	font-size: 1.1em;
+    line-height: 1.5;
+};
+
+var opbtns = {
+	padding: 0.5em .7em .7em;
+	border-top: 1px solid var.mbrdcolor;
+};
+
+var opmc = {
+	border: 1px solid #384454;
+    background: var(col1);    
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+	color: var.mcolor;
+};
+var bgloadanim = #92B7C9;
+var bgkeynav = rgb(93 157 255 / 52%);
+var keynavoutlcol = rgb(116 119 159);
+var keynavbright = 97;
+
+var dtpdayhov = {
+	border-color: #5A849C;
+    background-color: #4A707C;
+};
+
+var odaydiv = {
+	border: 1px solid var(col1);
+};
+
+var otdaydiv = {
+	border-color: #384454;
+};
+
+var selday = {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+	background: #5A849C !important;
+};
+var arww = 2px;
+var arwcol = var.mcolor;
+
+var schedbararw = {};
+
+var cmbtnarw = {};
+
+var mnthawebtn = {};
+var chkcolor = #5A849C;
+var tgonhov = #5A849C;
+
+var tgon = {
+	color: white;
+    background: var.chkcolor;
+};
+
+var tgchked = {
+	border-color: var.chkcolor;
+    background: var.chkcolor;
+};
+
+var ntp = {
+	background-color: var(col1);
+    border: 1px solid var.mbrdcolor;
+};
+
+var ontpocls = {
+	font-size: 1.3em;
+    padding: .1em .8em;
+};
+
+var ntlb = {};
+
+var errntlb = {};
+
+var errntp = {
+	color: white;
+	background: #CE5252;
+	border: none;
+};
+
+var errcls = {
+	color: #fff;
+};
+
+var pbtnblock = {};
+
+var chkmchked = {};
+
+var chkico = {
+	transition: 140ms;
+	border: 1px solid #aaa;
+	border-radius: 2px;
+	background: #CBD0DC;
+};
+
+var chkchked = {};
+
+var chkicoafter = {
+	box-sizing: border-box;
+    transform: rotate(45deg);
+    position: absolute;
+    content: '';
+    top: .05em;
+    left: .43em;
+    height: .93em;
+    width: .45em;
+    border: solid #2B3443 .17em;
+    border-top: 0;
+    border-left: 0;
+    display: block;
+};
+
+var rdlchkbfaf = {
+	border: 1px solid #aaa;	
+	background: #CBD0DC;
+};
+
+var rdlchkedbfaf = {};
+
+var rdlchkedaf = {
+	background-color: #55697A;
+};
+
+var rdlchkbfafdisb = {};
+
+var rdlchkedbfafdisb = {};
+
+var rdlchkedafdisb = {
+	background-color: #aaa;
+};
+
+var dischkico = {
+	background-color: #eee;
+};
+
+var dischked = {
+	border-color: gray;
+};
+var tgbrdcolor = #CBD0DC;
+
+var tgoff = {
+	background: #CBD0DC;
+	color: #333;
+};
+var bgoffhover = #CBD0DC;
+
+var grid-footer-btn = {};
+
+var grid-footer-btnsel = {
+	@inherit awebtnsel;
+};
+
+var grid-footer-btnfocus = {
+	@inherit obtnfocus;
+};
+
+var nstcreate = {
+	border-top: 1px solid var.mbrdcolor;
+};
+
+var nstcell = {
+	background: var.bg2;
+};
+
+var grid-row-cell = {};
+
+var altrow = {
+	background: #586779;
+};
+
+var restblock = {
+.awe-tab-btn:focus {
+	var(awetxtfocus);
+}
+};
+@insert main.css;

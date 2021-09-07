@@ -1,0 +1,72 @@
+@using System.Web.Optimization
+@{
+    var settings = SiteSettings.Read(HttpContext.Current.Request);
+    var ver = 135;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ASP.net Core Awesome controls demo app">
+    <script>
+        document.ver = @ver;
+        document.dev = @Autil.IsDev().ToString().ToLower();
+    </script>
+    <title>@ViewBag.Title - ASP.net Core Awesome</title>
+    <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")" type="image/x-icon" />
+    <link rel="apple-touch-icon image_src" href="@Url.Content("~/apple-touch-icon.png")">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600|Roboto&display=swap">
+    <link href="@Url.Content("~/Content/themes/" + settings.Theme + "/AwesomeMvc.css")?v=@ver" rel="stylesheet" type="text/css" id="aweStyle" />
+    <link href="@Url.Content("~/Content/site.css")?v=@ver" rel="stylesheet" type="text/css" />
+    @*call this to avoid including jquery on top*@
+    @Html.Awe().AwejQuery()
+</head>
+<body class="@settings.ThemeBodyClass">
+    @Html.Partial("top", settings)
+    <div class="page">
+        <main id="main" style="clear: both;">
+            @Html.Partial("Menu")
+            <div id="demoPage">
+                <div class="maintitl">Awesome ASP.net Core and MVC Controls</div>
+                <main id="maincont" role="main">
+                    @RenderBody()
+                    <br />
+                    <br />
+                    <br />
+                    <br style="clear: both;" />
+                </main>
+                @Html.Partial("Footer")
+            </div>
+        </main>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    @Scripts.Render("~/bundle/Scripts/js")
+
+    @*used in utils.init and sent on all post requests made by awe*@
+    @Html.AntiForgeryToken()
+
+    @*Initializes awesome and aweui (if present), call init after utils.js and jquery.validate.min.js*@
+    @Html.Awe().Init()
+    
+    <script>
+        // specific to this demo (no need to copy)
+        @{
+        var path = VirtualPathUtility.ToAbsolute(Url.Content("~"));
+        var url = new Uri(Request.Url, path).AbsoluteUri;
+        }
+        document.root = '@url';
+        $(function () {
+            site.documentReady();
+        });
+    </script>
+
+    @RenderSection("scripts", false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js" async></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.1/js.cookie.min.js" async></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<h2 data-u="@Url.Action("Index", "GridFilterRowClientData")">Grid filter row client data</h2>
+@*beginfrowdist*@
+@(Html.Awe().Grid("GridFrow")
+    .Height(390)
+    .Reorderable()
+    .Resizable()
+    .DataFunc("loadLunchesGrid")
+    .Mod(o => o.Main()
+        .FilterRow(keyupsel: ".awe-txt") // Person textbox has .awe-txt css class
+        .Custom("persistFilter"))
+    .Columns(
+        new Column {Bind = "Id", Width = 100 }.Mod(o => o.Filter("search:")),
+
+        new Column {Bind = "Person"}
+            .Mod(o => o.Filter(Html.Awe().TextBox("Person").Placeholder("Person").ClearButton())),
+
+        new Column { Bind = "Food", ClientFormatFunc = "site.imgFood", MinWidth = 200 }
+            .Mod(o => o.Filter(
+                Html.Awe().AjaxRadioList("Food")
+                    .DataFunc("utils.frowData('Food')")
+                    .Odropdown(d => d.ItemFunc("site.imgFoodItem")
+                        .CaptionFunc("site.imgFoodCaption")
+                        .ClearBtn()))),
+
+        new Column { Bind = "Date", ClientFormat = ".(DateStr)", Width = 170 },
+        new Column { Bind = "CountryName", Header = "Country" },
+
+        new Column { ClientFormat = ".(MealsStr)", MinWidth = 200, Header = "Meals", Grow = 1.7 }
+
+            // define valProp, by default Column.Bind is used (which we don't have for this column)
+            .Mod(o => o.Filter(valProp: "Meals", type: FilterType.Multiselect)),
+
+        new Column { Bind = "ChefName", Header = "Chef"}))
+<script>
+    // load client data and return grid model
+    function loadLunchesGrid(sgp) {
+        // cache storage used by this demo (cstorg.js), it will load data on first call,
+        // for no cache you can replace cstorg.get with $.get
+        return $.when(cstorg.get('@Url.Action("GetLunches", "Data")')).then(function(lunches) {
+            return buildGridModel(sgp, lunches);
+        });
+    }
+
+    function buildGridModel(sgp, lunches) {
+        var where = awef.where, select = awef.select, contains = awef.scont, loop = awef.loop;
+        var distLstFunc = utils.distLstFunc;
+        var gp = utils.getGridParams(sgp, ['meals']); // meals is array
+        var data = lunches;
+
+        // data used to populate some of the filter row dropdowns
+        var frowData = {};
+
+        // filter rules, will be applied in order ( gp.forder ),
+        // because we want to get the data for the dropdowns in order of filter application
+        var filterRules = {
+            Person: function() {
+                if (gp.person) {
+                    data = where(data, function (o) { return contains(o.Person, gp.person) });
+                }
+            },
+            Food: function() {
+                var items = utils.distItmsFunc('Food')(data);
+
+                frowData.Food = [{k: '', c: 'any', url: 'pasta.png'}].concat(select(items, function(o) { return { k: o.Food, c: o.Food, url: o.FoodPic } }));
+
+                if (gp.food) {
+                    data = where(data, function (o) { return o.Food === gp.food });
+                }
+            },
+            Meals: function() {
+                if (gp.meals) {
+                    data = where(data, function(o) {
+                        // check that each of gp.meals is present in o.Meals
+
+                        var mids = select(o.Meals, function(m) { return m.Id; });
+
+                        var hasAll = true;
+                        loop(gp.meals, function(mid) {
+                            hasAll = hasAll && awef.vcont(mid, mids);
+                        });
+
+                        return hasAll;
+                    });
+                }
+
+                // get data after querying this time, to filter the meals dropmenu as well
+                var distMeals = [];
+                var udict = {};
+                loop(data, function(o) {
+                    loop(o.Meals, function(m) {
+                        if (!udict[m.Id]) {
+                            distMeals.push(m);
+                            udict[m.Id] = 1;
+                        }
+                    });
+                });
+
+                frowData.Meals = select(distMeals, function(m) { return { k: m.Id, c: m.Name }; });
+            },
+            CountryName: function() {
+                frowData.CountryName = toKeyContent(distLstFunc('CountryName')(data), 'any');
+                if (gp.countryName) {
+                    data = where(data, function(o) { return o.CountryName === gp.countryName });
+                }
+            },
+            ChefName: function(){
+                frowData.ChefName = toKeyContent(distLstFunc('ChefName')(data).sort(), 'any');
+                if (gp.chefName) {
+                    data = where(data, function (o) { return o.ChefName === gp.chefName });
+                }
+            },
+            Date: function() {
+                frowData.Date = toKeyContent(distLstFunc('Year')(data).sort(), 'all years');
+                if (gp.date) {
+                    data = where(data, function (o) { return o.Year.toString() === gp.date });
+                }
+            }
+        };
+
+        // apply rules in order
+        utils.applyFilters({
+            rules: filterRules,
+            gp: gp
+        });
+
+        function toKeyContent(arr, emptyn) {
+            var res = [];
+
+            if (emptyn) res.push({ k: '', c: emptyn });
+
+            awef.loop(arr, function (item) {
+                res.push({ k: item, c: item });
+            });
+
+            return res;
+        }
+
+        var model = utils.gridModelBuilder(
+            {
+                key: "Id",
+                gp: gp,
+                items: data,
+
+                // replace default group header value for Date column
+                getHeaderVal: { Date: function (o) { return o.DateStr; } },
+                tag: { frow: frowData }
+            });
+
+        return model;
+    }
+</script>
+
+<script src="~/Scripts/persistFrow.js"></script>
+
+@*endfrowdist*@
+<div class="tabs code">
+    <div class="expl" data-caption="description">
+        The filter row generates a dropdown for each column that it receives data from the data source (DataFunc or Url), and we can also specify a custom editor for the filter column.<br />
+
+        We also take into account the order in which the user has selected the filters,
+        so the filter dropdowns/multiselect will also get filtered based on the previous selected filter.<br />
+
+        The filtering code is under your control so for example on the meals column we query the data and select the rows that contain all the selected meals,
+        but you could change it to select the ones that contain any of the selected meals.<br/>
+        
+        Filter row model is saved to sessionStorage so after page refresh the filters will be persisted; this code is custom so you can modify it to save to localStorage or server.
+    </div>
+    <div data-caption="view">
+        @Html.Source("Shared/Demos/GridFilterClientData.cshtml", "frowdist")
+    </div>
+    <div data-caption="controller">
+        @Html.Code("Awesome/DataController.cs").Action("GetLunches")
+    </div>
+</div>

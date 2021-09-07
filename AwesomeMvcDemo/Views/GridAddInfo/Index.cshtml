@@ -1,0 +1,44 @@
+
+@{
+    ViewBag.Title = "Grid additional info";
+}
+
+<h1>Grid additional info</h1>
+
+<div class="expl">
+    Showing how you can send additional data in the grid get data request.
+</div>
+<br/>
+<br/>
+<div>
+    avg price: <span id="avgPrice"></span><br/>
+    count: <span id="rowCount"></span>
+</div>
+
+<script>
+    $(function() {
+        var g = $('#AddInfo');
+        g.on('aweload', function(e) {
+            var res = g.data('o').lrs;
+
+            if (!$(e.target).is(g)) return;
+
+            $('#avgPrice').html(res.tg.avgPrice);
+            $('#rowCount').html(res.tg.count);
+        });
+    })
+</script>
+
+<div class="bar">
+    @Html.Awe().TextBox("txtPerson").Placeholder("person")
+</div>
+
+@(Html.Awe().Grid("AddInfo")
+    .Url(Url.Action("GetItems"))
+    .Mod(o => o.Main())
+    .Height(350)
+    .Parent("txtPerson", "person")
+    .Columns(
+        new Column{ Bind = "Person"},
+        new Column{ Bind = "Price"},
+        new Column{ Bind = "Food"}))

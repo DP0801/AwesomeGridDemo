@@ -1,0 +1,505 @@
+/* gtx */
+var col1 = #fff;
+var bordrad1 = 3px;
+var bordrad2 = 2px;
+var bordradg = 2px;
+var bordraded = 2px;
+var bg1 = #76b900;
+var bg2 = rgb(34, 34, 34);
+var background-disabled = #f8f8f8;
+var bgeditor = #ccc;
+var bgpop = #1a1a1a;
+var bgmodal = gainsboro;
+var awelipad = 5px;
+var rowlineh = 2.2em;
+var hghlcolor = #333;
+var mcolor = #1a1a1a;
+var mbrdcolor = #555;
+var brd2-color = var.mbrdcolor;
+var clrbrdcol = gray;
+var color-disb-caret = var.clrbrdcol;
+var color-disb-text = var.mbrdcolor;
+var clrdis = var.clrbrdcol;
+var lbrdcolor = #e5e5e5;
+var bgli = rgb(34, 34, 34);
+var bgg = var.bg2;
+var bg-grid-cont = #000;
+var outlselli = gold;
+var btnbrdcolor = #555;
+var gbarcolor = #bbb;
+var bglkpsel = var(bg1);
+var grid-cell-side-border = 1px solid #5a5a5a;
+var clscolor = #fff;
+var bgspincont = rgba(242, 240, 240, 0.34);
+var colcolor = #76b900;
+var sidebtnw = 2.2em;
+var txtsidepad = .75em;
+var cecolor = #ccc;
+var list-border = 1px solid var.mbrdcolor;
+var rgday-col = #555;
+
+var aweli = {
+	border-bottom: 1px solid #5a5a5a;
+};
+
+var gfooter = {
+	border-top: 1px solid #5a5a5a;
+};
+
+var bg-sel = {};
+
+var awe-grid = {
+	border: 1px solid var(brd2-color);
+	color: #eee;
+};
+
+var ocaret = {
+	background: url(caret.png);
+    width: 24px;
+    height: 24px;
+    border: none;
+    margin-left: -12px;
+    margin-top: -12px;
+};
+
+var odd-btn-awefocus = {
+	@inherit awebtnfocus;
+};
+
+var add = {
+	border: 1px solid #ced4da;
+};
+
+var ajxltd = {
+	border-bottom: 1px solid #eee;
+};
+
+var ajxlthead = {
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #F8F8F8;
+    color: #333;
+};
+
+var btnp = {
+	border: 1px solid #76b900;
+	background-image: linear-gradient(to bottom, #76b900, #76b900);
+	background-color: #76b900;
+	color: #fff;
+};
+
+var btnphover = {
+	background-color: #6aa700;
+    border: 1px solid #6aa700;
+};
+
+var btnpfocus = {};
+
+var btnpactive = {};
+
+var btn = {
+	font: inherit;
+    border: 1px solid var.btnbrdcolor;	
+    background-image: linear-gradient(to bottom, #333 0, #2a2a2a 100%);	
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #777;
+    color: #fff;
+    text-shadow: none;
+	
+	border-radius: 2px;	
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+	transition: box-shadow .28s cubic-bezier(0.4, 0.0, 0.2, 1);
+};
+
+var btnhover = {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+};
+
+var btnfocus = {
+	outline: 0;	
+	box-shadow: 0 0 3px 2px #3f3f3f;
+    border-color: #979797;
+};
+
+var btnactive = {
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+};
+
+var btnsel = {
+	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2) !important;
+	border: 1px solid #555;
+	background-color: #E2E2E2;
+	background-image: none;
+	color: #000;
+};
+
+var btnselspin = {
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+};
+
+var btndis = {
+.awe-disabled .o-btn.awe-btn {
+	color: gray;
+	box-shadow: none;
+}
+
+.awe-disabled .o-btn.awe-btn:not(.o-cbxbtn) {
+	background: #f8f8f8;
+	box-shadow: none;
+	border-color: var.mbrdcolor;
+}
+};
+
+var morebtn = {
+	@inherit btn;
+};
+
+var morebtnhover = {
+	@inherit btnhover;
+};
+
+var okbtnblock = {
+.awe-okbtn {
+    @inherit btnp;
+}
+
+    .awe-okbtn:hover {
+        @inherit btnphover;
+    }
+
+    .awe-okbtn:active {
+        @inherit btnpactive;
+    }
+};
+var icon2 = awe_icons.png;
+
+var reloadico = {
+	background-image: url('awe_icons.png');
+};
+
+var gridheader = {
+	background: rgb(34, 34, 34);
+};
+
+var highlight = {
+	color: gray !important;
+};
+
+var gbarcol = {};
+
+var highlightgroupbar = {};
+
+var awetxt = {
+	color: #1a1a1a;
+    border: 1px solid #555;    
+	background: var(bgeditor);
+};
+
+var awetxtfocus = {
+	outline: 0;
+	border-color: var.bg1;
+};
+
+var chkfocus = {};
+
+var awetxtdis = {
+	background: #f5f5f5;
+};
+
+var txtplaceholder = {};
+
+var placeholder = {
+	color: #1a1a1a;
+};
+
+var tabbtn = {
+	background-color: rgb(34, 34, 34);
+	color: #fff;
+};
+
+var tabfocus = {
+	outline: thin dotted #357AE8;
+	outline-offset: -3px;
+};
+
+var tabactive = {
+	background-color: #1a1a1a;
+	border: 1px solid #555;
+	margin-bottom: -2px;
+	border-bottom: 1px solid #1a1a1a;
+};
+
+var btngarw = {
+	border-color: #555;
+};
+
+var buttongroup-btn = {
+	font-size: .9em;
+	@inherit obtn;
+};
+
+var buttongroup-btn-hover = {
+	@inherit obtnhover;
+};
+
+var buttongroup-btn-selected = {};
+
+var buttongroup-btn-focus = {
+	@inherit obtnfocus;
+};
+
+var btngactive = {
+	background-color: #EEE;
+	color: #333;            
+	background-image: linear-gradient(to bottom, #eee, #e0e0e0);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+};
+
+var omenu = {
+	border: 1px solid rgba(100, 100, 100, 0.4);
+    background: #1a1a1a;	
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+};
+var oobrdcolor = #76b900;
+
+var oitm = {
+	line-height: 3.1em;
+};
+
+var itmfocus = {
+	background-color: #76b900;
+	color:white;
+};
+
+var itmsel = {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAKCAYAAACwoK7bAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sLHAoBFjlqnrwAAACUSURBVCjPrdMhCgJREAbgXRU0eARPICyYPYZ9BU9g9QQG7YJNzAoW72Db5B2MJoMgn8EHLiuG1ffH4fHBzJtJkojBGBfkMdGZV7axwBTzgJ7RjYWuAnpDvy6QIavUGth4J6+LdnDCDqNQa2JfQte/tjzAHQ8scSyhBdr/zHPqM1f0YnzWogIPkcZar0M4ggla3949AREf0AnV0H4LAAAAAElFTkSuQmCC) no-repeat left center rgba(0, 0, 0, 0);
+};
+
+var itmselfocus = {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAKCAYAAACwoK7bAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sLHAoBFjlqnrwAAACUSURBVCjPrdMhCgJREAbgXRU0eARPICyYPYZ9BU9g9QQG7YJNzAoW72Db5B2MJoMgn8EHLiuG1ffH4fHBzJtJkojBGBfkMdGZV7axwBTzgJ7RjYWuAnpDvy6QIavUGth4J6+LdnDCDqNQa2JfQte/tjzAHQ8scSyhBdr/zHPqM1f0YnzWogIPkcZar0M4ggla3949AREf0AnV0H4LAAAAAElFTkSuQmCC) no-repeat left center #76b900;
+};
+
+var itmfoccei = {
+	color: #fff;
+};
+
+var itm-foc-arw = {
+	border-color: #fff;
+};
+
+var obtn = {};
+
+var obtnhover = {};
+
+var obtnfocus = {};
+
+var obtnactive = {};
+
+var ddbtnactive = {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+};
+
+var igmenu = {};
+
+var igmenusel = {};
+
+var cbxbtnfocus = {
+	background: transparent;
+};
+
+var cbxbtnslbtn = {
+	color: #333;
+};
+
+var phdr = {};
+
+var ophdrocls = {
+	padding: .5em 1em;
+    font-size: 1.3em;
+};
+
+var optitl = {};
+
+var opbtns = {
+	padding: 0.5em .7em .7em;
+};
+
+var opmc = {
+	border: 1px solid #555;
+    background: #1a1a1a;
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+};
+var bgloadanim = var.bg1;
+var bgkeynav = #3aff8926;
+var keynavoutlcol = #76b900;
+var keynavbright = 96;
+
+var dtpdayhov = {
+	border-color: #777;
+};
+
+var odaydiv = {
+	border: 1px solid var.bgpop;
+	border-radius: 50%;
+};
+
+var otdaydiv = {
+	border-color: #777;
+};
+
+var selday = {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+	background: var.bg1 !important;
+	color: white;
+};
+var arww = 2px;
+var arwcol = #ccc;
+
+var schedbararw = {};
+
+var cmbtnarw = {};
+
+var mnthawebtn = {};
+var chkcolor = var.mbrdcolor;
+var tgonhov = #609304;
+
+var tgon = {
+	color: white;
+    background: #588900;
+};
+
+var tgchked = {
+	border-color: var.chkcolor;
+    background: var.chkcolor;
+};
+
+var ntp = {
+	background-color: #fff;
+    border: 1px solid #ccc;
+	color: #000;
+};
+
+var ontpocls = {
+	font-size: 1.3em;
+    padding: .1em .8em;
+};
+
+var ntlb = {};
+
+var errntlb = {};
+
+var errntp = {
+	color: white;
+	background: #CE5252;
+	border-color: #CE5252;
+};
+
+var errcls = {
+	color: #fff;
+};
+
+var pbtnblock = {};
+
+var chkmchked = {};
+
+var chkico = {
+	transition: 140ms;
+	border: .15em solid #ccc;
+	border-radius: .15em;
+	background: #000;
+};
+
+var chkchked = {
+	background: #76b900;
+    border-color: transparent;
+};
+
+var chkicoafter = {
+	box-sizing: border-box;
+	transform: rotate(45deg);
+	position: absolute;
+	content: '';
+	top: -.05em;
+	left: .349em;
+	height: .93em;
+	width: .45em;
+	border: solid #000 .17em;
+	border-top: 0;
+	border-left: 0;
+	display: block;
+};
+
+var rdlchkbfaf = {
+	border: 2px solid #ccc;
+	background: #000;
+};
+
+var rdlchkedbfaf = {
+	border: 2px solid #76b900;
+};
+
+var rdlchkedaf = {
+	background-color: #76b900;
+};
+
+var rdlchkbfafdisb = {
+	border-color: #ccc;
+};
+
+var rdlchkedbfafdisb = {};
+
+var rdlchkedafdisb = {
+	background-color: #bbb;
+	border-color: #bbb;
+};
+
+var dischkico = {
+	background-color: #dcdcdc !important;
+	border-color: #ccc;
+};
+
+var dischked = {};
+var tgbrdcolor = var.mbrdcolor;
+
+var tgoff = {
+	background: #e5e5e5;
+};
+var bgoffhover = #d3d3d3;
+
+var grid-footer-btn = {
+	border: none;
+	background: transparent !important;
+	color: #fff;
+};
+
+var grid-footer-btnsel = {
+	@inherit awebtnsel;
+	color: #ccc;
+};
+
+var grid-footer-btnfocus = {
+	@inherit obtnfocus;
+};
+
+var nstcreate = {
+	border-top: 1px solid gainsboro;
+};
+
+var nstcell = {
+	background: #fff;
+};
+
+var grid-row-cell = {};
+
+var altrow = {
+	background: rgb(17, 17, 17);
+};
+
+var restblock = {
+.o-srcc input[type="text"].o-src{
+	color: #fff;
+}
+.o-tgoff{
+	color: #333;
+}
+};
+@insert main.css;

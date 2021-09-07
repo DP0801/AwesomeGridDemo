@@ -1,0 +1,90 @@
+@using Omu.Awem.Scheduler
+@{
+    ViewBag.Title = "Scheduler, built using Awesome Grid and PopupForm controls";
+}
+<h1>Scheduler Demo</h1>
+
+Scheduler built using the awesome Grid, AjaxRadioList and PopupForm controls.
+<br />
+<br />
+@*begin*@
+@section scripts {
+    <script src="~/Scripts/scheduler.js"></script>    
+}
+
+@{
+    var id = "Schedule1";
+}
+@(Html.Awe().InitPopupForm()
+    .Name("createMeeting")
+    .Group("scheduler")
+    .Height(570)
+    .Url(Url.Action("Create"))
+    .ParameterFunc("utils.getMinutesOffset")
+    .Success("utils.refreshGrid('"+id+"')"))
+@(Html.Awe().InitPopupForm()
+    .Name("editMeeting")
+    .Group("scheduler")
+    .Height(570)
+    .Url(Url.Action("Edit"))
+    .ParameterFunc("utils.getMinutesOffset")
+    .Success("utils.refreshGrid('"+id+"')"))
+@(Html.Awe().InitPopupForm()
+    .Name("deleteMeeting")
+    .Group("scheduler")
+    .Height(200)
+    .Url(Url.Action("Delete"))
+    .Success("utils.refreshGrid('"+id+"')"))
+
+<button type="button" class="awe-btn mbtn" onclick="awe.open('createMeeting')">Create</button>
+
+<div class="scheduler">
+    <div class="schedBar">
+        <div class="o-btng sbitem">
+            <button type="button" class="awe-btn todaybtn">Today</button><button type="button" class="awe-btn prevbtn"><i class="o-arw left"></i></button><button type="button" class="awe-btn nextbtn"><i class="o-arw right"></i></button>
+        </div>
+        <div class="sbitem">
+            @Html.Awe().DatePicker("Date").CssClass("schDate").HtmlAttributes(null, new { tabindex = -1 })
+            <span class="dateLabel"></span>
+        </div>
+        <div class="sbitem sbvtype">
+            @(Html.Awe().AjaxRadioList("ViewType")
+                    .CssClass("viewType")
+                    .ButtonGroup()
+                    .Url(Url.Action("GetViewTypes")))
+        </div>
+    </div>
+
+    @(Html.Awe().Grid(id)
+            .Height(430)
+            .Mod(o => o.Loading())
+            .ShowFooter(false)
+            .ShowGroupedColumn(false)
+            .RowClassClientFormat(".(RowClass)")
+            .CssClass("schedulerGrid")
+            .Url(Url.Action("ScheduleGetItems"))
+            .Parent("ViewType", "viewType")
+            .Parent("HoursType", "hoursType")
+            .Parent("HourStep", "hourStep")
+            .Parent("Date", "date")
+            .ParameterFunc("utils.getMinutesOffset"))
+
+    <div class="schedBotBar" data-g="@(id)">
+        @(Html.Awe().AjaxRadioList("HoursType")
+            .Mod("awem.odropdown")
+            .Value(SchedulerHour.FullDay)
+            .Url(Url.Action("GetHoursTypes")))
+        @(Html.Awe().AjaxRadioList("HourStep")
+            .Odropdown(o => o.InLabel("Step: "))
+            .Value(60)
+            .Url(Url.Action("GetHourSteps")))
+    </div>
+</div>
+
+<script>
+    $(function () {
+        scheduler.init('@id', 'Meeting');
+    });
+</script>
+@*end*@
+@Html.Source("SchedulerDemo/Index.cshtml", wrap: true)
