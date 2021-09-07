@@ -191,17 +191,17 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
             if (!string.IsNullOrEmpty(Key))
             {
                 if (string.IsNullOrEmpty(filterCriteria))
-                    filterCriteria = " Key like '%" + Key + "%' ";
+                    filterCriteria = " [Key] like '%" + Key + "%' ";
                 else
-                    filterCriteria = filterCriteria + " AND Key like '%" + Key + "%' ";
+                    filterCriteria = filterCriteria + " AND [Key] like '%" + Key + "%' ";
             }
 
             if (!string.IsNullOrEmpty(Value))
             {
                 if (string.IsNullOrEmpty(filterCriteria))
-                    filterCriteria = " Value like '%" + Value + "%' ";
+                    filterCriteria = " [Value] like '%" + Value + "%' ";
                 else
-                    filterCriteria = filterCriteria + " AND Value like '%" + Value + "%' ";
+                    filterCriteria = filterCriteria + " AND [Value] like '%" + Value + "%' ";
             }
 
             forder = forder ?? new string[] { };
