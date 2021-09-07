@@ -43,36 +43,36 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
             search = (search ?? "").ToLower();
             var items = Db.Dinners.Where(o => o.Name.ToLower().Contains(search)).AsQueryable();
 
-            var response = new WebHttpResponse();
-            var baseModel = new BaseGridModel();
-            baseModel.search = search;
-            baseModel.pagenumber = g.Page;
-            baseModel.pagesize = g.PageSize;
+            //var response = new WebHttpResponse();
+            //var baseModel = new BaseGridModel();
+            //baseModel.search = search;
+            //baseModel.pagenumber = g.Page;
+            //baseModel.pagesize = g.PageSize;
 
-            string data = JsonConvert.SerializeObject(baseModel);
-            string url = string.Format("{0}T1Service/GetServiceControllerData_Count", "http://localhost:11977/api/");
+            //string data = JsonConvert.SerializeObject(baseModel);
+            //string url = string.Format("{0}T1Service/GetServiceControllerData_Count", "http://localhost:11977/api/");
 
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-            var totalCount = Convert.ToInt32(response.RawResponse);
+            //response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+            //var totalCount = Convert.ToInt32(response.RawResponse);
 
 
-            url = string.Format("{0}T1Service/ServiceDataGetAll_New", "http://localhost:11977/api/");
+            //url = string.Format("{0}T1Service/ServiceDataGetAll_New", "http://localhost:11977/api/");
 
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-            var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
+            //response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+            //var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
 
-            //var model = new GridModelBuilder<Dinner>(items, g)
-            //{
-            //    KeyProp = o => o.Id, // needed for api select, update, tree, nesting, EF
-            //    GetItem = () => Db.Get<Dinner>(Convert.ToInt32(g.Key)), // called by the grid.api.update
-            //    Map = MapToGridModel,
-            //}.Build();
-
-            var model = new GridModelBuilder<T1ServiceModel>(data1, g)
+            var model = new GridModelBuilder<Dinner>(items, g)
             {
                 KeyProp = o => o.Id, // needed for api select, update, tree, nesting, EF
-                PageCount = (totalCount/ g.PageSize)
+                GetItem = () => Db.Get<Dinner>(Convert.ToInt32(g.Key)), // called by the grid.api.update
+                Map = MapToGridModel,
             }.Build();
+
+            //var model = new GridModelBuilder<T1ServiceModel>(data1, g)
+            //{
+            //    KeyProp = o => o.Id, // needed for api select, update, tree, nesting, EF
+            //    PageCount = (totalCount/ g.PageSize)
+            //}.Build();
 
             return Json(model);
         }
