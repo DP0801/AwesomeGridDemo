@@ -1,7 +1,10 @@
 @*<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">
-    Grid outside filter row and custom render
-</h2>*@
+        Grid outside filter row and custom render
+    </h2>*@
 @*beginofr*@
+@model T1ServiceModel
+@using AwesomeMvcDemo
+
 @{
     var pref = "frowOut";
     var gridId = "GridFrowOut";
@@ -33,10 +36,10 @@
         </label>
     }
 
-    <label class="nonflt">
-        <span>Show items as:</span> <br />
-        @Html.Awe().CheckBox("itemsType").Otoggl(o => o.No("Rows").Yes("Custom").Width("7em"))
-    </label>
+    @*<label class="nonflt">
+            <span>Show items as:</span> <br />
+            @Html.Awe().CheckBox("itemsType").Otoggl(o => o.No("Rows").Yes("Custom").Width("7em"))
+        </label>*@
 </div>
 
 @(Html.Awe().Grid(gridId)
@@ -44,8 +47,9 @@
     .Height(650)
     .Reorderable()
     .ShowGroupBar(false)
+    .Attr("data-syncg", "T1ServiceModel")
     //.Mod(o => o.Main().Custom("outsideFilter"))
-    .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))    
+    .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))
     .Columns(
           new Column { Bind = "Id", Width = 75 }
           .Mod(o => o.InlineId()),

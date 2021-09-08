@@ -182,7 +182,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             if (!string.IsNullOrEmpty(ProgramName))
             {
-                if(string.IsNullOrEmpty(filterCriteria))
+                if (string.IsNullOrEmpty(filterCriteria))
                     filterCriteria = " ProgramName like '%" + ProgramName + "%' ";
                 else
                     filterCriteria = filterCriteria + " AND ProgramName like '%" + ProgramName + "%' ";
@@ -224,7 +224,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
             var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
-             
+
             return Json(new GridModelBuilder<T1ServiceModel>(data1, g)
             {
                 KeyProp = o => o.Id,
@@ -232,7 +232,7 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                 //,Tag = new { frow = frow }
             }.Build());
         }
-         
+
         [HttpPost]
         public ActionResult BatchSave(T1ServiceModel[] inputs)
         {
@@ -255,8 +255,17 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
                         baseModel.IsActive = input.IsActive;
 
                         string data = JsonConvert.SerializeObject(baseModel);
+                        string url = string.Empty;
 
-                        string url = string.Format("{0}T1Service/UpdateServiceData", "http://localhost:11977/api/");
+                        if (input.Id == 0)
+                        {
+                            url = string.Format("{0}T1Service/InsertServiceData", "http://localhost:11977/api/");
+                        }
+                        else
+                        {
+                            url = string.Format("{0}T1Service/UpdateServiceData", "http://localhost:11977/api/");
+                        }
+
                         var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
                         var edit = input.Id;
                         //var ent = edit ? Db.Get<Dinner>(input.Id) : new Dinner();
