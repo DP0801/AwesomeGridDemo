@@ -238,7 +238,6 @@
     <Content Include="Scripts\infra\gridUtils.js" />
     <Content Include="Scripts\infra\strUtil.js" />
     <Content Include="Scripts\cstorg.js" />
-    <Compile Include="Controllers\Demos\Grid\BaseGridModel.cs" />
     <Compile Include="Controllers\Demos\Grid\GanttChartController.cs" />
     <Compile Include="Controllers\Demos\Grid\GridAddInfoController.cs" />
     <Compile Include="Controllers\Demos\Grid\GridChartController.cs" />
@@ -254,8 +253,10 @@
     <Compile Include="Controllers\Demos\Grid\TreeGridInlineEditingController.cs" />
     <Compile Include="Controllers\Demos\Helpers\OdropdownController.cs" />
     <Compile Include="Controllers\Demos\Helpers\TabsController.cs" />
+    <Compile Include="Controllers\T1SignalServiceController.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="HttpResponse.cs" />
+    <Compile Include="Models\BaseGridModel.cs" />
     <Compile Include="Models\EntityMissingException.cs" />
     <Compile Include="T1ServiceModel.cs" />
     <Compile Include="Utils\ExprHelper.cs" />
@@ -660,6 +661,7 @@
     <Content Include="Views\Tabs\Index.cshtml" />
     <Content Include="Views\Tabs\Part1.cshtml" />
     <Content Include="Views\TreeGridInlineEditing\Index.cshtml" />
+    <Content Include="Views\T1SignalService\Index.cshtml" />
     <None Include="Views\TreeGrid\Create.cshtml" />
     <None Include="Views\FormDemo\AskName.cshtml" />
     <None Include="Views\FormDemo\FillForm.cshtml" />

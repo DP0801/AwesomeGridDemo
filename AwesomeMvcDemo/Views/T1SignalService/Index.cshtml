@@ -1,4 +1,4 @@
-@*<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">
+﻿@*<h2 data-u="@Url.Action("Index", "GridFilterRowServerSideData")">
         Grid outside filter row and custom render
     </h2>*@
 @*beginofr*@
@@ -43,7 +43,7 @@
 </div>
 
 @(Html.Awe().Grid(gridId)
-    .Url(Url.Action("DinnersFilterGrid", "GridFilterRowServerSideData"))
+    .Url(Url.Action("T1SignalServiceGrid", "T1SignalService"))
     .Height(650)
     .Reorderable()
     .ShowGroupBar(false)
@@ -288,3 +288,4 @@
             @Html.Code("Demos/Grid/GridFilterRowServerSideDataController.cs").Action("DinnersFilterGrid")
         </div>
     </div>*@
+

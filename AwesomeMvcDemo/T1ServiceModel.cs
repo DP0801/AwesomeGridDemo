@@ -12,6 +12,9 @@ namespace AwesomeMvcDemo
         [Display(Name = "ProgramID")]
         public string ProgramID { get; set; }
 
+        [Display(Name = "HostName")]
+        public string HostName { get; set; }
+
         [Display(Name = "ProgramName")]
         public string ProgramName { get; set; }
 
@@ -23,5 +26,8 @@ namespace AwesomeMvcDemo
 
         [Display(Name = "IsActive")]
         public bool IsActive { get; set; }
+
+        [Display(Name = "Notes")]
+        public string Notes { get; set; }
     }
 }

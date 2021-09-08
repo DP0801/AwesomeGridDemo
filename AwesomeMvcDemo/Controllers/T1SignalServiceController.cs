@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -10,24 +10,19 @@ using Omu.AwesomeMvc;
 using WebHttpResponse = AwesomeMvcDemo.HttpResponse;
 using AwesomeMvcDemo.ViewModels.Input;
 using Omu.Awem.Utils;
+using System.Configuration;
 
-namespace AwesomeMvcDemo.Controllers.Demos.Grid
+namespace AwesomeMvcDemo.Controllers
 {
-    public class GridFilterRowServerSideDataController : Controller
+    public class T1SignalServiceController : Controller
     {
+        // GET: T1SignalService
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult LargeDataSource()
-        {
-            return View();
-        }
-         
-        #region Outside filter row
-
-        public ActionResult DinnersFilterGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
+        public ActionResult T1SignalServiceGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
         {
             string filterCriteria = string.Empty;
 
@@ -69,19 +64,19 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
             baseModel.pagenumber = g.Page;
             baseModel.pagesize = g.PageSize;
 
-            string data = JsonConvert.SerializeObject(baseModel);
-            string url = string.Format("{0}T1Service/GetServiceControllerData_Count", "http://localhost:11977/api/");
+            string requestData = JsonConvert.SerializeObject(baseModel);
+            string url = string.Format("{0}T1Service/GetServiceControllerData_Count", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
             var totalCount = Convert.ToInt32(response.RawResponse);
 
 
-            url = string.Format("{0}T1Service/ServiceDataGetAll_New", "http://localhost:11977/api/");
+            url = string.Format("{0}T1Service/ServiceDataGetAll_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-            var data1 = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
+            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
+            var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
 
-            return Json(new GridModelBuilder<T1ServiceModel>(data1, g)
+            return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
             {
                 KeyProp = o => o.Id,
                 PageCount = (totalCount / g.PageSize)
@@ -161,8 +156,5 @@ namespace AwesomeMvcDemo.Controllers.Demos.Grid
 
             return Json(res);
         }
-         
-        #endregion
-         
     }
 }
