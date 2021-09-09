@@ -123,7 +123,8 @@ namespace AwesomeMvcDemo.Controllers
 
                             var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
                             var edit = input.Id;
-                            res.Add(input);
+                            // res.Add(input);
+                            res.Add(new { Item = MapToGridModel(baseModel) });
                         }
                         catch (Exception ex)
                         {
@@ -158,6 +159,8 @@ namespace AwesomeMvcDemo.Controllers
                             baseModel.IsActive = input.IsActive;
                             baseModel.Notes = input.Notes;
                             lstT1ServiceModel.Add(baseModel);
+
+                            res.Add(new { Item = MapToGridModel(baseModel) });
                         }
                         catch (Exception ex)
                         {
@@ -178,6 +181,20 @@ namespace AwesomeMvcDemo.Controllers
 
             return Json(res);
             // return RedirectToAction("T1SignalServiceGrid", "T1SignalService");
+        }
+
+        private object MapToGridModel(T1ServiceModel o)
+        {
+            return new
+            {
+                o.Id,
+                o.HostName,
+                o.ProgramName,
+                o.Key,
+                o.Value,
+                o.IsActive,
+                o.Notes
+            };
         }
     }
 }
