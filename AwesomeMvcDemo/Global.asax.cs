@@ -32,6 +32,7 @@ namespace AwesomeMvcDemo
             new Worker().Start();
 
             Settings.CheckboxModFunc = box => box.Ochk();
+            log4net.Config.XmlConfigurator.Configure();
         }
 
 

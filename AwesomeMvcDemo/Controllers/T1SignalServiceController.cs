@@ -11,11 +11,14 @@ using WebHttpResponse = AwesomeMvcDemo.HttpResponse;
 using AwesomeMvcDemo.ViewModels.Input;
 using Omu.Awem.Utils;
 using System.Configuration;
+using System.Net;
+using log4net;
 
 namespace AwesomeMvcDemo.Controllers
 {
     public class T1SignalServiceController : Controller
     {
+        private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // GET: T1SignalService
         public ActionResult Index()
         {
@@ -24,6 +27,7 @@ namespace AwesomeMvcDemo.Controllers
 
         public ActionResult T1SignalServiceGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
         {
+            log.Debug("test");
             Session.Remove("filterCriteria");
             string filterCriteria = string.Empty;
 
@@ -56,9 +60,6 @@ namespace AwesomeMvcDemo.Controllers
                     filterCriteria = filterCriteria + " AND [Value] like '%" + Value + "%' ";
             }
 
-            forder = forder ?? new string[] { };
-            var query = Db.Dinners.AsQueryable();
-
             var response = new WebHttpResponse();
             var baseModel = new BaseGridModel();
             baseModel.search = filterCriteria;
@@ -67,28 +68,57 @@ namespace AwesomeMvcDemo.Controllers
 
             string requestData = JsonConvert.SerializeObject(baseModel);
             string url = string.Format("{0}T1Service/GetServiceControllerData_Count", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
-            var totalCount = Convert.ToInt32(response.RawResponse);
-
-
-            url = string.Format("{0}T1Service/ServiceDataGetAll_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-
-            response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
-            var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
-
-            Session.Add("filterCriteria", filterCriteria);
-
-            int PageCount = (totalCount / g.PageSize);
-
-            if (totalCount > g.PageSize)
-                PageCount = PageCount + 1;
-
-            return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
+            try
             {
-                KeyProp = o => o.Id,
-                PageCount = PageCount
-                //,Tag = new { frow = frow }
+
+                response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
+
+                if (response.RawResponse == null)
+                {
+                    return Json(new GridModelBuilder<T1ServiceModel>(null, g)
+                    {
+                        KeyProp = o => o.Id
+                    }.Build());
+                }
+
+                var totalCount = Convert.ToInt32(response.RawResponse);
+
+
+                url = string.Format("{0}T1Service/ServiceDataGetAll_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+                response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
+
+                if (response.RawResponse != null)
+                {
+                    var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
+
+                    Session.Add("filterCriteria", filterCriteria);
+
+                    int PageCount = (totalCount / g.PageSize);
+
+                    if (totalCount > g.PageSize)
+                        PageCount = PageCount + 1;
+
+                    return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
+                    {
+                        KeyProp = o => o.Id,
+                        PageCount = PageCount
+                        //,Tag = new { frow = frow }
+                    }.Build());
+                }
+                else
+                {
+                    log.Error("This could be an error");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Error to call API {url}:{ex.ToString()}");
+            }
+            return Json(new GridModelBuilder<T1ServiceModel>(null, g)
+            {
+                KeyProp = o => o.Id
             }.Build());
         }
 
@@ -184,11 +214,26 @@ namespace AwesomeMvcDemo.Controllers
 
                 string data = JsonConvert.SerializeObject(lstT1ServiceModel);
                 string url = string.Format("{0}T1Service/InsertServiceData_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-                var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+                try
+                {
+                    var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error($"Error to call API {url}:{ex.ToString()}");
+                }
             }
 
             return Json(res);
-            // return RedirectToAction("T1SignalServiceGrid", "T1SignalService");
         }
 
         [HttpPost]
