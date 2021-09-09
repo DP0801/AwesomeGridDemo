@@ -100,19 +100,19 @@ namespace AwesomeMvcDemo.Controllers
                         try
                         {
                             var baseModel = new T1ServiceModel();
-                            baseModel.Id = input.Id;
+                            baseModel.Id = (input.Id == null) ? 0 : input.Id;
                             baseModel.ProgramID = input.ProgramName;
                             baseModel.ProgramName = input.ProgramName;
                             baseModel.HostName = input.HostName;
                             baseModel.Key = input.Key;
                             baseModel.Value = input.Value;
-                            baseModel.IsActive = input.IsActive;
+                            baseModel.IsActive = (input.IsActive == null) ? false : input.IsActive;
                             baseModel.Notes = input.Notes;
 
                             string data = JsonConvert.SerializeObject(baseModel);
                             string url = string.Empty;
 
-                            if (input.Id == 0)
+                            if (input.Id == 0 || input.Id == null)
                             {
                                 url = string.Format("{0}T1Service/InsertServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
                             }
@@ -150,13 +150,13 @@ namespace AwesomeMvcDemo.Controllers
                         try
                         {
                             var baseModel = new T1ServiceModel();
-                            baseModel.Id = input.Id;
+                            baseModel.Id = (input.Id == null) ? 0 : input.Id;
                             baseModel.ProgramID = input.ProgramName;
                             baseModel.ProgramName = input.ProgramName;
                             baseModel.HostName = input.HostName;
                             baseModel.Key = input.Key;
                             baseModel.Value = input.Value;
-                            baseModel.IsActive = input.IsActive;
+                            baseModel.IsActive = (input.IsActive == null) ? false : input.IsActive;
                             baseModel.Notes = input.Notes;
                             lstT1ServiceModel.Add(baseModel);
 
