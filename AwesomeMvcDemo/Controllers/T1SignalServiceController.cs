@@ -112,11 +112,109 @@ namespace AwesomeMvcDemo.Controllers
 
                         if (input.Id == 0)
                         {
-                            url = string.Format("{0}T1Service/InsertServiceData", "http://localhost:11977/api/");
+                            url = string.Format("{0}T1Service/InsertServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
                         }
                         else
                         {
-                            url = string.Format("{0}T1Service/UpdateServiceData", "http://localhost:11977/api/");
+                            url = string.Format("{0}T1Service/UpdateServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                        }
+
+                        var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+                        var edit = input.Id;
+                        res.Add(input);
+                    }
+                    catch (Exception ex)
+                    {
+                        vstate.Add("Name", ex.Message);
+                    }
+                }
+
+                if (!vstate.IsValid())
+                {
+                    res.Add(vstate.ToInlineErrors());
+                }
+            }
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public ActionResult BatchSaveAll(T1ServiceModel[] inputs)
+        {
+            var res = new List<object>();
+            var lstT1ServiceModel = new List<T1ServiceModel>();
+            foreach (var input in inputs)
+            {
+                var vstate = ModelUtil.Validate(input);
+
+                if (vstate.IsValid())
+                {
+                    try
+                    {
+                        var baseModel = new T1ServiceModel();
+                        baseModel.Id = input.Id;
+                        baseModel.ProgramID = input.ProgramName;
+                        baseModel.ProgramName = input.ProgramName;
+                        baseModel.HostName = input.HostName;
+                        baseModel.Key = input.Key;
+                        baseModel.Value = input.Value;
+                        baseModel.IsActive = input.IsActive;
+                        baseModel.Notes = input.Notes;
+                        lstT1ServiceModel.Add(baseModel);
+                    }
+                    catch (Exception ex)
+                    {
+                        vstate.Add("Name", ex.Message);
+                    }
+                }
+
+                if (!vstate.IsValid())
+                {
+                    res.Add(vstate.ToInlineErrors());
+                }
+            }
+
+            string data = JsonConvert.SerializeObject(lstT1ServiceModel);
+            string url = string.Format("{0}T1Service/InsertServiceData_New",  ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+            var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public ActionResult BatchSave1(T1ServiceModel[] inputs)
+        {
+            string value = Convert.ToString(Request["txtKeyValue"].ToString());
+            var res = new List<object>();
+
+            foreach (var input in inputs)
+            {
+                var vstate = ModelUtil.Validate(input);
+
+                if (vstate.IsValid())
+                {
+                    try
+                    {
+                        var baseModel = new T1ServiceModel();
+                        baseModel.Id = input.Id;
+                        baseModel.ProgramID = input.ProgramName;
+                        baseModel.ProgramName = input.ProgramName;
+                        baseModel.HostName = input.HostName;
+                        baseModel.Key = input.Key;
+                        baseModel.Value = input.Value;
+                        baseModel.IsActive = input.IsActive;
+                        baseModel.Notes = input.Notes;
+
+                        string data = JsonConvert.SerializeObject(baseModel);
+                        string url = string.Empty;
+
+                        if (input.Id == 0)
+                        {
+                            url = string.Format("{0}T1Service/InsertServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                        }
+                        else
+                        {
+                            url = string.Format("{0}T1Service/UpdateServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
                         }
 
                         var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
