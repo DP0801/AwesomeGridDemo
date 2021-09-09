@@ -78,6 +78,9 @@
            new Column { Bind = "IsActive" }
             .Mod(o => o.Inline(Html.Awe().CheckBox("IsActive"))),
 
+         new Column { Bind = "Notes" }
+            .Mod(o => o.Inline(Html.Awe().TextBox("Notes"))),
+
           new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 80 },
           new Column { ClientFormat = Html.InlineCancelBtn(), Width = 85 }))
 

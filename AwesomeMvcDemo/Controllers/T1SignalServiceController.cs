@@ -89,50 +89,91 @@ namespace AwesomeMvcDemo.Controllers
         {
             var res = new List<object>();
 
-            foreach (var input in inputs)
+            if (inputs.Count() == 1)
             {
-                var vstate = ModelUtil.Validate(input);
-
-                if (vstate.IsValid())
+                foreach (var input in inputs)
                 {
-                    try
+                    var vstate = ModelUtil.Validate(input);
+
+                    if (vstate.IsValid())
                     {
-                        var baseModel = new T1ServiceModel();
-                        baseModel.Id = input.Id;
-                        baseModel.ProgramID = input.ProgramName;
-                        baseModel.ProgramName = input.ProgramName;
-                        baseModel.HostName = input.HostName;
-                        baseModel.Key = input.Key;
-                        baseModel.Value = input.Value;
-                        baseModel.IsActive = input.IsActive;
-                        baseModel.Notes = input.Notes;
-
-                        string data = JsonConvert.SerializeObject(baseModel);
-                        string url = string.Empty;
-
-                        if (input.Id == 0)
+                        try
                         {
-                            url = string.Format("{0}T1Service/InsertServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-                        }
-                        else
-                        {
-                            url = string.Format("{0}T1Service/UpdateServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-                        }
+                            var baseModel = new T1ServiceModel();
+                            baseModel.Id = input.Id;
+                            baseModel.ProgramID = input.ProgramName;
+                            baseModel.ProgramName = input.ProgramName;
+                            baseModel.HostName = input.HostName;
+                            baseModel.Key = input.Key;
+                            baseModel.Value = input.Value;
+                            baseModel.IsActive = input.IsActive;
+                            baseModel.Notes = input.Notes;
 
-                        var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-                        var edit = input.Id;
-                        res.Add(input);
+                            string data = JsonConvert.SerializeObject(baseModel);
+                            string url = string.Empty;
+
+                            if (input.Id == 0)
+                            {
+                                url = string.Format("{0}T1Service/InsertServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                            }
+                            else
+                            {
+                                url = string.Format("{0}T1Service/UpdateServiceData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                            }
+
+                            var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+                            var edit = input.Id;
+                            res.Add(input);
+                        }
+                        catch (Exception ex)
+                        {
+                            vstate.Add("Name", ex.Message);
+                        }
                     }
-                    catch (Exception ex)
+
+                    if (!vstate.IsValid())
                     {
-                        vstate.Add("Name", ex.Message);
+                        res.Add(vstate.ToInlineErrors());
+                    }
+                }
+            }
+            else
+            {
+                var lstT1ServiceModel = new List<T1ServiceModel>();
+                foreach (var input in inputs)
+                {
+                    var vstate = ModelUtil.Validate(input);
+
+                    if (vstate.IsValid())
+                    {
+                        try
+                        {
+                            var baseModel = new T1ServiceModel();
+                            baseModel.Id = input.Id;
+                            baseModel.ProgramID = input.ProgramName;
+                            baseModel.ProgramName = input.ProgramName;
+                            baseModel.HostName = input.HostName;
+                            baseModel.Key = input.Key;
+                            baseModel.Value = input.Value;
+                            baseModel.IsActive = input.IsActive;
+                            baseModel.Notes = input.Notes;
+                            lstT1ServiceModel.Add(baseModel);
+                        }
+                        catch (Exception ex)
+                        {
+                            vstate.Add("Name", ex.Message);
+                        }
+                    }
+
+                    if (!vstate.IsValid())
+                    {
+                        res.Add(vstate.ToInlineErrors());
                     }
                 }
 
-                if (!vstate.IsValid())
-                {
-                    res.Add(vstate.ToInlineErrors());
-                }
+                string data = JsonConvert.SerializeObject(lstT1ServiceModel);
+                string url = string.Format("{0}T1Service/InsertServiceData_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
             }
 
             return Json(res);
@@ -175,7 +216,7 @@ namespace AwesomeMvcDemo.Controllers
             }
 
             string data = JsonConvert.SerializeObject(lstT1ServiceModel);
-            string url = string.Format("{0}T1Service/InsertServiceData_New",  ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+            string url = string.Format("{0}T1Service/InsertServiceData_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
             var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
 
             return Json(res);
