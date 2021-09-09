@@ -24,6 +24,7 @@ namespace AwesomeMvcDemo.Controllers
 
         public ActionResult T1SignalServiceGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
         {
+            Session.Remove("filterCriteria");
             string filterCriteria = string.Empty;
 
             if (!string.IsNullOrEmpty(HostName))
@@ -75,6 +76,8 @@ namespace AwesomeMvcDemo.Controllers
 
             response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
             var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
+
+            Session.Add("filterCriteria", filterCriteria);
 
             return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
             {
@@ -181,6 +184,17 @@ namespace AwesomeMvcDemo.Controllers
 
             return Json(res);
             // return RedirectToAction("T1SignalServiceGrid", "T1SignalService");
+        }
+
+        [HttpPost]
+        public void BatchSave1()
+        {
+            if ((string)Session["filterCriteria"] != null)
+            {
+                string filterCriteria = (string)Session["filterCriteria"];
+            }
+
+            //return RedirectToAction("T1SignalServiceGrid", "T1SignalService");
         }
 
         private object MapToGridModel(T1ServiceModel o)

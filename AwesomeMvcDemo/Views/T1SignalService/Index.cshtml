@@ -16,15 +16,15 @@
     <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
     <button type="button" onclick="$('#@gridId').data('api').batchSave()" class="awe-btn">Save All</button>
     <button type="button" onclick="$('#@gridId').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
-    @*<div style="float: right;">
-            @using (Ajax.BeginForm("BatchSave", "T1SignalService", new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
+    <div style="float: right;">
+            @using (Ajax.BeginForm("BatchSave1", "T1SignalService", new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Label("Value")
                 @Html.TextBox("txtKeyValue")
                 <button type="submit" class="awe-btn">Bulk Update</button>
             }
-        </div>*@
+        </div>
 </div>
 <div id="outfrow" class="frowpnl awe-il" style="margin-right: 1em">
     @*context will add a prefix to all awesome editors html ids*@
