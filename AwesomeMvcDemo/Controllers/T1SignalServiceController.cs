@@ -79,10 +79,15 @@ namespace AwesomeMvcDemo.Controllers
 
             Session.Add("filterCriteria", filterCriteria);
 
+            int PageCount = (totalCount / g.PageSize);
+
+            if (totalCount > g.PageSize)
+                PageCount = PageCount + 1;
+
             return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
             {
                 KeyProp = o => o.Id,
-                PageCount = (totalCount / g.PageSize)
+                PageCount = PageCount
                 //,Tag = new { frow = frow }
             }.Build());
         }
