@@ -12,8 +12,12 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script>
-    function OnSucessForm1(res) {
-        alert(res);
+    function OnSucessForm1(res) {         
+        if (res == "success") {
+            location.reload();
+        }
+        else
+            alert(res);
     }
 </script>
 <div class="bar">
@@ -93,7 +97,6 @@
 @(Html.BindOVld<T1ServiceModel>("#" + gridId, b =>
 {
     b.Prop("HostName", "noAsdf", "Name can't contain asdf");
-    b.Relate("Organic", "Name"); // when checking Organic Name will also be updated
 }))
 <script>
 

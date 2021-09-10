@@ -237,9 +237,21 @@ namespace AwesomeMvcDemo.Controllers
         }
 
         [HttpPost]
-        public void BulkUpdate(string txtKeyValue)
+        public JsonResult BulkUpdate(string txtKeyValue)
         {
-            string res = txtKeyValue;
+            string returnMessage = string.Empty;
+            if (string.IsNullOrEmpty(Convert.ToString(Session["filterCriteria"])))
+            {
+                returnMessage = $"Please apply filter first.";
+                return Json(returnMessage, JsonRequestBehavior.AllowGet);
+            }
+
+            if (string.IsNullOrEmpty(txtKeyValue))
+            {
+                returnMessage = $"Please apply Value.";
+                return Json(returnMessage, JsonRequestBehavior.AllowGet);
+            }
+
             if (!string.IsNullOrEmpty(Convert.ToString(Session["filterCriteria"])))
             {
                 string filterCriteria = (string)Session["filterCriteria"];
@@ -252,7 +264,17 @@ namespace AwesomeMvcDemo.Controllers
                 string url = string.Format("{0}T1Service/SearchAndBulkUpdateServiceControllerData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
                 var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-            }             
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    returnMessage = "success";
+                }
+                else
+                {
+                    returnMessage = $"Somethingwend wrong:{response.StatusCode}";
+                }
+            }
+
+            return Json(returnMessage, JsonRequestBehavior.AllowGet);
         }
 
         private object MapToGridModel(T1ServiceModel o)
