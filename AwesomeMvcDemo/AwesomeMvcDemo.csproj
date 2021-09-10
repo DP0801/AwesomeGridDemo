@@ -232,6 +232,8 @@
     <Compile Include="Areas\Area1\Area1AreaRegistration.cs" />
     <Compile Include="Areas\Area1\Controllers\A1HomeController.cs" />
     <Compile Include="Controllers\AweUiController.cs" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\srtest.js" />
     <Content Include="Scripts\persistFrow.js" />
     <Content Include="Scripts\ovld.js" />

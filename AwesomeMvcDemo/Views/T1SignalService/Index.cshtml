@@ -9,6 +9,13 @@
     var pref = "frowOut";
     var gridId = "GridFrowOut";
 }
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script>
+    function OnSucessForm1(res) {
+        alert(res);
+    }
+</script>
 <div class="bar">
     @*<div style="float: right;">
             @Html.Awe().TextBox("txtSearch2").Placeholder("search...").CssClass("searchtxt")
@@ -17,14 +24,14 @@
     <button type="button" onclick="$('#@gridId').data('api').batchSave()" class="awe-btn">Save All</button>
     <button type="button" onclick="$('#@gridId').data('api').inlineCancelAll()" class="awe-btn">Cancel All</button>
     <div style="float: right;">
-            @using (Ajax.BeginForm("BatchSave1", "T1SignalService", new AjaxOptions { UpdateTargetId = "divInterestDeatils" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Label("Value")
-                @Html.TextBox("txtKeyValue")
-                <button type="submit" class="awe-btn">Bulk Update</button>
-            }
-        </div>
+        @using (Ajax.BeginForm("BulkUpdate", "T1SignalService", new AjaxOptions { OnSuccess = "OnSucessForm1" }, new { @id = "Form1" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Label("Value")
+            @Html.TextBox("txtKeyValue")
+            <button type="submit" class="awe-btn">Bulk Update</button>
+        }
+    </div>
 </div>
 <div id="outfrow" class="frowpnl awe-il" style="margin-right: 1em">
     @*context will add a prefix to all awesome editors html ids*@
@@ -85,7 +92,7 @@
           new Column { ClientFormat = Html.InlineCancelBtn(), Width = 85 }))
 @(Html.BindOVld<T1ServiceModel>("#" + gridId, b =>
 {
-    b.Prop("HostName", "noAsdf", "Name can't contain asdf");     
+    b.Prop("HostName", "noAsdf", "Name can't contain asdf");
     b.Relate("Organic", "Name"); // when checking Organic Name will also be updated
 }))
 <script>

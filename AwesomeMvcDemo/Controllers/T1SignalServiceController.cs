@@ -237,25 +237,22 @@ namespace AwesomeMvcDemo.Controllers
         }
 
         [HttpPost]
-        public void BatchSave1()
+        public void BulkUpdate(string txtKeyValue)
         {
-            if ((string)Session["filterCriteria"] != null)
+            string res = txtKeyValue;
+            if (!string.IsNullOrEmpty(Convert.ToString(Session["filterCriteria"])))
             {
                 string filterCriteria = (string)Session["filterCriteria"];
 
                 var bulkUpdateModel = new BulkUpdateModel();
-                bulkUpdateModel.Search = "1";
-                bulkUpdateModel.Value = filterCriteria;
+                bulkUpdateModel.Search = filterCriteria;
+                bulkUpdateModel.Value = txtKeyValue;
 
                 string data = JsonConvert.SerializeObject(bulkUpdateModel);
-                string url = string.Empty;
-
-                url = string.Format("{0}T1Service/SearchAndBulkUpdateServiceControllerData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+                string url = string.Format("{0}T1Service/SearchAndBulkUpdateServiceControllerData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
                 var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-            }
-
-            //return RedirectToAction("T1SignalServiceGrid", "T1SignalService");
+            }             
         }
 
         private object MapToGridModel(T1ServiceModel o)
