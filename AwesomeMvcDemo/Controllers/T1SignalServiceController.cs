@@ -60,6 +60,9 @@ namespace AwesomeMvcDemo.Controllers
                     filterCriteria = filterCriteria + " AND [Value] like '%" + Value + "%' ";
             }
 
+
+            Session.Add("filterCriteria", filterCriteria);
+
             var response = new WebHttpResponse();
             var baseModel = new BaseGridModel();
             baseModel.search = filterCriteria;
@@ -70,11 +73,12 @@ namespace AwesomeMvcDemo.Controllers
             string url = string.Format("{0}T1Service/GetServiceControllerData_Count", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
             try
             {
-
+                //This API call is getting total count
                 response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
 
                 if (response.RawResponse == null)
                 {
+                    log.Error($"Unable to get data for {url}:{response.StatusCode}:{response.ErrorMessage}");
                     return Json(new GridModelBuilder<T1ServiceModel>(null, g)
                     {
                         KeyProp = o => o.Id
@@ -83,7 +87,7 @@ namespace AwesomeMvcDemo.Controllers
 
                 var totalCount = Convert.ToInt32(response.RawResponse);
 
-
+                //This API call will retrieve all records based on search
                 url = string.Format("{0}T1Service/ServiceDataGetAll_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
                 response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
@@ -91,9 +95,6 @@ namespace AwesomeMvcDemo.Controllers
                 if (response.RawResponse != null)
                 {
                     var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
-
-                    Session.Add("filterCriteria", filterCriteria);
-
                     int PageCount = (totalCount / g.PageSize);
 
                     if (totalCount > g.PageSize)
@@ -103,12 +104,11 @@ namespace AwesomeMvcDemo.Controllers
                     {
                         KeyProp = o => o.Id,
                         PageCount = PageCount
-                        //,Tag = new { frow = frow }
                     }.Build());
                 }
                 else
                 {
-                    log.Error("This could be an error");
+                    log.Error($"Unable to get data for {url}:{response.StatusCode}:{response.ErrorMessage}");
                 }
 
             }
@@ -242,6 +242,17 @@ namespace AwesomeMvcDemo.Controllers
             if ((string)Session["filterCriteria"] != null)
             {
                 string filterCriteria = (string)Session["filterCriteria"];
+
+                var bulkUpdateModel = new BulkUpdateModel();
+                bulkUpdateModel.Search = "1";
+                bulkUpdateModel.Value = filterCriteria;
+
+                string data = JsonConvert.SerializeObject(bulkUpdateModel);
+                string url = string.Empty;
+
+                url = string.Format("{0}T1Service/SearchAndBulkUpdateServiceControllerData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+                var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
             }
 
             //return RedirectToAction("T1SignalServiceGrid", "T1SignalService");

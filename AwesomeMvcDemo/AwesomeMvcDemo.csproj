@@ -260,6 +260,7 @@
     <Compile Include="HttpHelper.cs" />
     <Compile Include="HttpResponse.cs" />
     <Compile Include="Models\BaseGridModel.cs" />
+    <Compile Include="Models\BulkUpdateModel.cs" />
     <Compile Include="Models\EntityMissingException.cs" />
     <Compile Include="T1ServiceModel.cs" />
     <Compile Include="Utils\ExprHelper.cs" />
