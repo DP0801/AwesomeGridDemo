@@ -259,18 +259,28 @@ namespace AwesomeMvcDemo.Controllers
                 var bulkUpdateModel = new BulkUpdateModel();
                 bulkUpdateModel.Search = filterCriteria;
                 bulkUpdateModel.Value = txtKeyValue;
-
-                string data = JsonConvert.SerializeObject(bulkUpdateModel);
                 string url = string.Format("{0}T1Service/SearchAndBulkUpdateServiceControllerData", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
-                var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    returnMessage = "success";
+                    string data = JsonConvert.SerializeObject(bulkUpdateModel);
+                    
+
+                    var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        returnMessage = "success";
+                    }
+                    else
+                    {
+                        returnMessage = $"Error occured while bulk update:{response.StatusCode}";
+                        log.Error($"Error occured while bulk update for url:{response.StatusCode}:{response.RawResponse}");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    returnMessage = $"Somethingwend wrong:{response.StatusCode}";
+                    returnMessage = ex.Message.ToString();                     
+                    log.Error($"Error to call API {url}:{ex.ToString()}");
                 }
             }
 
