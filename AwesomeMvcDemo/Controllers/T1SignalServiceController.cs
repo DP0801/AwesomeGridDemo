@@ -224,7 +224,7 @@ namespace AwesomeMvcDemo.Controllers
                     }
                     else
                     {
-
+                        log.Error($"Unable to post data for {url}:{response.StatusCode}:{response.ErrorMessage}");
                     }
                 }
                 catch (Exception ex)
