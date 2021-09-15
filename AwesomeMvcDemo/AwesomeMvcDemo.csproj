@@ -366,7 +366,7 @@
     <Content Include="Views\Shared\EditorTemplates\OdropdownFavs.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Shared\Demos\GridFilterRowServerData.cshtml" />
-    <None Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Sitemap\Index.cshtml" />
     <Content Include="Views\T1SignalService\Index.cshtml" />
     <None Include="Views\Shared\top.cshtml" />
