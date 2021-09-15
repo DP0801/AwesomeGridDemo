@@ -24,14 +24,14 @@ namespace AwesomeMvcDemo
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            FilterProviders.Providers.Add(new AntiForgeryTokenFilter());
+            //FilterProviders.Providers.Add(new AntiForgeryTokenFilter());
             
 
-            GlobalFilters.Filters.Add(new JsonAllowGetAttribute());
+            //GlobalFilters.Filters.Add(new JsonAllowGetAttribute());
 
-            new Worker().Start();
+            //new Worker().Start();
 
-            Settings.CheckboxModFunc = box => box.Ochk();
+            //Settings.CheckboxModFunc = box => box.Ochk();
             log4net.Config.XmlConfigurator.Configure();
         }
 
@@ -84,9 +84,9 @@ namespace AwesomeMvcDemo
             try
             {
                 // Call target Controller and pass the routeData.
-                IController errorController = new ErrorController();
-                errorController.Execute(new RequestContext(
-                    new HttpContextWrapper(Context), routeData));
+                //IController errorController = new ErrorController();
+                //errorController.Execute(new RequestContext(
+                //    new HttpContextWrapper(Context), routeData));
             }
             catch (Exception)
             {
@@ -95,9 +95,9 @@ namespace AwesomeMvcDemo
                 rd.Values.Add("action", "Master");
                 rd.Values.Add("error", exception);
 
-                IController errorController = new ErrorController();
-                errorController.Execute(new RequestContext(
-                    new HttpContextWrapper(Context), rd));
+                //IController errorController = new ErrorController();
+                //errorController.Execute(new RequestContext(
+                //    new HttpContextWrapper(Context), rd));
             }
         }
     }

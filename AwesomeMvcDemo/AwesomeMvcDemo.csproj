@@ -52,15 +52,14 @@
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Omu.AwesomeMvc">
       <HintPath>..\libs\Omu.AwesomeMvc.dll</HintPath>
     </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\net40\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -73,42 +72,6 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.barcodes, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.barcodes.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.forms, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.forms.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.io, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.io.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.kernel, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.kernel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.layout, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.layout.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.pdfa, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.pdfa.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.sign, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.sign.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.styledxmlparser, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.styledxmlparser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itext.svg, Version=7.1.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext7.7.1.4\lib\net40\itext.svg.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -135,10 +98,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
@@ -229,9 +188,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\Area1\Area1AreaRegistration.cs" />
-    <Compile Include="Areas\Area1\Controllers\A1HomeController.cs" />
-    <Compile Include="Controllers\AweUiController.cs" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\persistFrow.js" />
@@ -243,21 +199,6 @@
     <Content Include="Scripts\infra\strUtil.js" />
     <Content Include="Scripts\cstorg.js" />
     <Compile Include="Controllers\DefaultController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GanttChartController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridAddInfoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridChartController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridColumnsAutoWidthController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridFilterRowClientDataController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridFilterRowServerSideDataController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridFrozenColumnsController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridInlineBatchEditingController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridInlineClientValidationController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridSaveFiltersController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridWithListCountColumnController.cs" />
-    <Compile Include="Controllers\Demos\Grid\NotificationController.cs" />
-    <Compile Include="Controllers\Demos\Grid\TreeGridInlineEditingController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\OdropdownController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\TabsController.cs" />
     <Compile Include="Controllers\T1SignalServiceController.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="HttpResponse.cs" />
@@ -266,54 +207,24 @@
     <Compile Include="Models\EntityMissingException.cs" />
     <Compile Include="T1ServiceModel.cs" />
     <Compile Include="Utils\ExprHelper.cs" />
-    <Compile Include="Utils\FakeAsyncExtensions.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridRadioButtonsController.cs" />
     <Content Include="Scripts\awedb.js" />
     <Content Include="Scripts\awedict.js" />
     <Content Include="Scripts\signalrSync.js" />
     <Content Include="Scripts\sideMenu.js" />
-    <Compile Include="Controllers\Demos\Grid\MasterDetailCrud\MasterDetailInlineController.cs" />
     <Compile Include="Utils\Autil.cs" />
-    <Compile Include="Controllers\Demos\AjaxList\AjaxListCrudController.cs" />
-    <Compile Include="Controllers\Demos\Generic\DisabledController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridCustomRender.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridInlineEditParentController.cs" />
-    <Compile Include="Controllers\Demos\Grid\MasterDetailCrud\RestInlController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\Dropmenu.cs" />
-    <Compile Include="Controllers\Demos\Helpers\FormInputController.cs" />
     <Compile Include="Helpers\CodeHelper.cs" />
     <Compile Include="Helpers\StrUtil.cs" />
     <Compile Include="Models\AweArgumentNullException.cs" />
-    <Compile Include="SyncHub.cs" />
-    <Compile Include="Controllers\Demos\Grid\MasterDetailCrud\AddressesGridCrudController.cs" />
-    <Compile Include="Controllers\Demos\Grid\DragAndDropDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridClientDataDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridInlineEditDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridMultiRowHeaderGroupsController.cs" />
-    <Compile Include="Controllers\Demos\Grid\PurchasesCrudDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\RtlDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\CallDemoController.cs" />
-    <Compile Include="Controllers\Demos\Misc\AngularDemoController.cs" />
-    <Compile Include="Controllers\Demos\Misc\KnockoutDemoController.cs" />
     <Compile Include="Helpers\Awesome\CrudHelpers.cs" />
     <Compile Include="Helpers\ShowCodeHelpers.cs" />
     <Compile Include="Models\Cache.cs" />
     <Compile Include="Models\DemoSettings.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\AntiForgeryTokenFilter.cs" />
     <Compile Include="Utils\Check.cs" />
-    <Compile Include="Utils\GridPdfBuilder.cs" />
-    <Compile Include="Utils\GridTxtBuilder.cs" />
     <Compile Include="Utils\IgnoreAntiforgeryTokenAttribute.cs" />
     <Compile Include="Utils\JsonAllowGetAttribute.cs" />
-    <Compile Include="Utils\CanonicalAsIsAttribute.cs" />
     <Compile Include="Utils\DemoUtils.cs" />
     <Compile Include="Utils\GridExcelBuilder.cs" />
-    <Compile Include="Controllers\Demos\Helpers\AjaxCheckboxListDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\AjaxDropdownDemoController.cs" />
-    <Compile Include="Controllers\Demos\Generic\AttributesDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\AutocompleteDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\DinnersGridCrudController.cs" />
     <Compile Include="Utils\GridUtils.cs" />
     <Compile Include="Utils\Worker.cs" />
     <Compile Include="ViewModels\Attributes\CollectionMaxLenAttribute.cs" />
@@ -322,83 +233,12 @@
     <Compile Include="ViewModels\Input\AjaxCheckboxListDemoInput.cs" />
     <Compile Include="ViewModels\Input\AjaxDropdownDemoInput.cs" />
     <Compile Include="ViewModels\Input\ApiParamsInput.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\ChefLookupController.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\MealCustomItemLookupController.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\MealTableLayoutLookupController.cs" />
-    <Compile Include="Controllers\Demos\Grid\CascadingGridDemoController.cs" />
-    <Compile Include="Controllers\Awesome\MultiLookup\CategoriesMultiLookupController.cs" />
-    <Compile Include="Controllers\Awesome\Autocomplete\CategoryAutocompleteController.cs" />
-    <Compile Include="Controllers\Demos\Generic\ClientDataLoadingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\CustomPagerGridDemoController.cs" />
-    <Compile Include="Controllers\Awesome\DataController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\DinnersAjaxListController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\DinnersListAjaxListController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridCheckboxesDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridArrayDataSourceController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridInfiniteScrollingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridShowHideColumnsApiDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridNestingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\KeyboardNavigationDemoController.cs" />
-    <Compile Include="Controllers\Awesome\MultiLookup\MealsCustomItemMultiLookupController.cs" />
-    <Compile Include="Controllers\Demos\Generic\MultipleLevelCascadingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridNoRecordsFoundCustomLoadingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\SchedulerDemoController.cs" />
     <Compile Include="Utils\SiteSettings.cs" />
-    <Compile Include="Controllers\Demos\Grid\CustomQueryingGridController.cs" />
-    <Compile Include="Controllers\Demos\Generic\ErrorHandlingDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\FormDemoController.cs" />
-    <Compile Include="Controllers\Demos\AjaxList\AjaxListDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\AjaxRadioListDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\DatePickerDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridChooseColumnsDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridExportToExcelDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridShowHideColumnsDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridSpreadsheetDemoController.cs" />
-    <Compile Include="Controllers\Awesome\Grid\LunchGridController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GroupingGridController.cs" />
-    <Compile Include="Controllers\Demos\Generic\ListBindingController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\LookupDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridMaintainSelectionDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\MasterDetailCrud\MasterDetailCrudDemoController.cs" />
-    <Compile Include="Controllers\Awesome\Autocomplete\MealAutocompleteController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxDropdown\MealBoundToManyController.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\MealCustomSearchLookupController.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\MealLookupController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\MealsAjaxListController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\MealsApiDemoAjaxListController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\MealsCustomItemAjaxListController.cs" />
-    <Compile Include="Controllers\Awesome\MultiLookup\MealsCustomSearchMultiLookupController.cs" />
-    <Compile Include="Controllers\Awesome\MultiLookup\MealsMultiLookupController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\MealsTableLayoutAjaxListController.cs" />
     <Compile Include="Models\MySiteMap.cs" />
-    <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Models\SiteMapItem.cs" />
-    <Compile Include="Controllers\Demos\Grid\MailboxDemoController.cs" />
-    <Compile Include="Controllers\Awesome\Grid\MessagesGridController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\MultiLookupDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\PagerDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\PopupDemoController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\PopupFormDemoController.cs" />
-    <Compile Include="Controllers\Awesome\Autocomplete\PrimesAutocompleteController.cs" />
-    <Compile Include="Controllers\Demos\Grid\GridCrudDemoController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxDropdown\SortAjaxDropdownController.cs" />
-    <Compile Include="Controllers\Demos\Helpers\TextBoxDemoController.cs" />
-    <Compile Include="Controllers\Demos\Grid\TreeGridController.cs" />
-    <Compile Include="Controllers\Demos\Generic\UnobtrusiveController.cs" />
-    <Compile Include="Controllers\Demos\Misc\WizardDemoController.cs" />
-    <Compile Include="Controllers\Demos\AjaxList\DinnersController.cs" />
     <Compile Include="Models\AwesomeDemoException.cs" />
     <Compile Include="ViewModels\Display\MealDisplay.cs" />
     <Compile Include="Models\EnumerableExtensions.cs" />
-    <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\Awesome\Autocomplete\MealChildAutocompleteController.cs" />
-    <Compile Include="Controllers\Awesome\Lookup\CategoryLookupController.cs" />
-    <Compile Include="Controllers\Awesome\AjaxList\MealsTableAjaxListController.cs" />
-    <Compile Include="Controllers\Demos\AjaxList\MealsController.cs" />
-    <Compile Include="Controllers\Awesome\MultiLookup\MealsTableLayoutMultiLookupController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\Demos\Misc\CrudInLookupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -478,151 +318,25 @@
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\scheduler.js" />
     <Content Include="Scripts\utils.js" />
-    <Content Include="Views\CallDemo\Index.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\AjaxCheckboxListDemo\Index.cshtml" />
-    <Content Include="Views\AjaxDropdownDemo\Index.cshtml" />
-    <Content Include="Views\AjaxListDemo\ClientSideApi.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\AjaxListDemo\CustomItemTemplate.cshtml" />
-    <Content Include="Views\AjaxListDemo\Index.cshtml" />
-    <Content Include="Views\AjaxListDemo\TableLayout.cshtml" />
-    <Content Include="Views\AjaxRadioListDemo\Index.cshtml" />
-    <Content Include="Views\AttributesDemo\Index.cshtml" />
-    <Content Include="Views\AutocompleteDemo\Index.cshtml" />
-    <Content Include="Views\CascadingGridDemo\Index.cshtml" />
-    <Content Include="Views\ClientDataLoadingDemo\Index.cshtml" />
-    <Content Include="Views\CrudInLookup\Index.cshtml" />
-    <Content Include="Views\CustomPagerGridDemo\Index.cshtml" />
-    <Content Include="Views\DatePickerDemo\Index.cshtml" />
-    <Content Include="Views\AngularDemo\Index.cshtml" />
-    <Content Include="Areas\Area1\Views\_ViewStart.cshtml" />
-    <Content Include="Views\CrudInLookup\DinnerLookup.cshtml" />
-    <Content Include="Views\CrudInLookup\DinnerMultiLookup.cshtml" />
-    <Content Include="Areas\Area1\Views\A1Home\AreaPart.cshtml" />
     <None Include="Properties\PublishProfiles\profile1.pubxml" />
-    <Content Include="Views\AweUi\Index.cshtml" />
     <Content Include="Views\Shared\Demos\AjaxListBoundToParent.cshtml" />
     <Content Include="Views\Default\Index.cshtml" />
     <None Include="Views\DinnersGridCrud\Create.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\AjaxListDemo\Crud.cshtml" />
-    <Content Include="Views\Error\Expected.cshtml" />
-    <Content Include="Views\Error\HttpError404.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Error\HttpError505.cshtml" />
-    <Content Include="Views\ErrorHandlingDemo\Index.cshtml" />
-    <Content Include="Views\FormDemo\Index.cshtml" />
-    <Content Include="Views\GridArrayDataSource\Index.cshtml" />
-    <Content Include="Views\GridCheckboxesDemo\Index.cshtml" />
-    <Content Include="Views\GridChooseColumnsDemo\Index.cshtml" />
-    <Content Include="Views\GridCrudDemo\Index.cshtml" />
-    <Content Include="Views\GridDemo\ClientSideApi.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\GridDemo\CustomFormat.cshtml" />
-    <Content Include="Views\GridDemo\CustomQuerying.cshtml" />
-    <Content Include="Views\GridDemo\Grouping.cshtml" />
-    <Content Include="Views\GridDemo\Index.cshtml" />
-    <Content Include="Views\GridDemo\RTLSupport.cshtml" />
-    <Content Include="Views\GridDemo\Selection.cshtml" />
-    <Content Include="Views\GridDemo\Sorting.cshtml" />
-    <Content Include="Views\GridExportToExcelDemo\Index.cshtml" />
-    <Content Include="Views\GridInfiniteScrollingDemo\Index.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\GridMaintainSelectionDemo\Index.cshtml" />
-    <Content Include="Views\GridNestingDemo\Index.cshtml" />
-    <Content Include="Views\GridNoRecordsFoundCustomLoadingDemo\Index.cshtml" />
-    <Content Include="Views\GridShowHideColumnsApiDemo\Index.cshtml" />
-    <Content Include="Views\GridShowHideColumnsDemo\Index.cshtml" />
-    <Content Include="Views\GridSpreadsheetDemo\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\KeyboardNavigationDemo\Index.cshtml" />
-    <Content Include="Views\ListBinding\Index.cshtml" />
-    <Content Include="Views\LookupDemo\CustomSearch.cshtml" />
-    <Content Include="Views\LookupDemo\Index.cshtml" />
-    <Content Include="Views\LookupDemo\Misc.cshtml" />
-    <Content Include="Views\MailboxDemo\Index.cshtml" />
-    <Content Include="Views\MasterDetailCrudDemo\Index.cshtml" />
-    <Content Include="Views\MultiLookupDemo\CustomSearch.cshtml" />
-    <Content Include="Views\MultiLookupDemo\Index.cshtml" />
-    <Content Include="Views\MultiLookupDemo\Misc.cshtml" />
-    <Content Include="Views\MultipleLevelCascadingDemo\Index.cshtml" />
-    <Content Include="Views\PagerDemo\Index.cshtml" />
-    <Content Include="Views\PopupDemo\Index.cshtml" />
-    <Content Include="Views\PopupFormDemo\Index.cshtml" />
-    <Content Include="Views\RtlDemo\Index.cshtml" />
-    <Content Include="Views\PopupDemo\DropdownContent.cshtml" />
-    <Content Include="Views\GridInlineEditDemo\Index.cshtml" />
-    <Content Include="Views\KnockoutDemo\Index.cshtml" />
-    <Content Include="Views\GridClientDataDemo\Index.cshtml" />
-    <Content Include="Views\PopupFormDemo\PopupConfirm.cshtml" />
-    <Content Include="Views\GridInlineEditDemo\Popup.cshtml" />
-    <Content Include="Views\GridMultiRowHeaderGroups\Index.cshtml" />
-    <Content Include="Views\DragAndDropDemo\Index.cshtml" />
-    <Content Include="Views\GridInlineEditDemo\ConditionalDemo.cshtml" />
-    <Content Include="Views\GridSpreadsheetDemo\Autocomplete.cshtml" />
-    <Content Include="Views\GridCrudDemo\ClientData.cshtml" />
-    <Content Include="Views\PopupDemo\PopupBtns.cshtml" />
-    <Content Include="Views\GridInlineEditDemo\MultiEditorsDemo.cshtml" />
-    <Content Include="Views\LookupDemo\MealLookup.cshtml" />
-    <Content Include="Views\MultiLookupDemo\MealMultiLookup.cshtml" />
-    <Content Include="Views\PopupDemo\PopupSize.cshtml" />
-    <Content Include="Views\RestInl\Addresses.cshtml" />
-    <Content Include="Views\PopupDemo\PopupMod.cshtml" />
-    <Content Include="Views\Error\Master.cshtml" />
-    <Content Include="Views\Dropmenu\Index.cshtml" />
-    <Content Include="Views\Dropmenu\Popup1.cshtml" />
-    <Content Include="Views\PopupDemo\DdInPopup.cshtml" />
     <Content Include="Views\Shared\Demos\GridCrud.cshtml" />
     <Content Include="Views\Shared\Demos\CardsAndItems.cshtml" />
-    <Content Include="Views\FormInput\Index.cshtml" />
-    <Content Include="Views\GridDemo\Details.cshtml" />
-    <Content Include="Views\GridDemo\OpenDetails.cshtml" />
-    <Content Include="Views\Error\Resource404.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
-    <Content Include="Views\GridInlineEditParent\Index.cshtml" />
     <Content Include="Views\Home\Ptest.cshtml" />
-    <Content Include="Views\Disabled\Index.cshtml" />
-    <Content Include="Views\GridCustomRender\Index.cshtml" />
-    <Content Include="Views\Error\Resource400.cshtml" />
-    <Content Include="Views\ErrorHandlingDemo\ErrOnPost.cshtml" />
-    <Content Include="Views\GridRadiobuttons\Index.cshtml" />
     <Content Include="Views\Home\Social.cshtml" />
-    <Content Include="Views\MasterDetailInline\Create.cshtml" />
-    <Content Include="Views\GridDemo\Filtering.cshtml" />
     <Content Include="Views\Shared\Demos\GridFilterClientData.cshtml" />
     <Content Include="Views\Shared\Demos\GridFilterMultiClientData.cshtml" />
-    <Content Include="Views\GridColumnsAutoWidth\Index.cshtml" />
-    <Content Include="Views\GridWithListCountColumn\Index.cshtml" />
-    <Content Include="Views\GridFrozenColumns\Index.cshtml" />
     <Content Include="Views\Shared\Demos\GridFilterOutside.cshtml" />
-    <Content Include="Views\GridAddInfo\Index.cshtml" />
-    <Content Include="Views\GridInlineBatchEditing\Index.cshtml" />
-    <Content Include="Views\GridFilterRowServerSideData\Index.cshtml" />
-    <Content Include="Views\GridFilterRowClientData\Index.cshtml" />
-    <Content Include="Views\Notification\Index.cshtml" />
-    <Content Include="Views\Odropdown\Index.cshtml" />
-    <Content Include="Views\GridInlineEditDemo\ClientSave.cshtml" />
-    <Content Include="Views\GridSaveFilters\Index.cshtml" />
-    <Content Include="Views\GridInlineClientValidation\Index.cshtml" />
-    <Content Include="Views\GanttChart\Index.cshtml" />
-    <Content Include="Views\GridFilterRowServerSideData\LargeDataSource.cshtml" />
-    <Content Include="Views\GridChart\Pie.cshtml" />
-    <None Include="Views\SchedulerDemo\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultiLookupDropdown.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MealsOdropdown.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LookupDropdown.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Odropdown.cshtml" />
     <Content Include="Views\Sitemap\parent.cshtml" />
-    <Content Include="Views\SchedulerDemo\Index.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Shared\ListItems\Dinner.cshtml" />
     <Content Include="Views\Shared\ListItems\DinnerThead.cshtml" />
     <Content Include="Views\Shared\ListItems\Meal.cshtml" />
@@ -654,38 +368,8 @@
     <Content Include="Views\Shared\Demos\GridFilterRowServerData.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Sitemap\Index.cshtml" />
-    <Content Include="Views\TextBoxDemo\Index.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Tabs\Index.cshtml" />
-    <Content Include="Views\Tabs\Part1.cshtml" />
-    <Content Include="Views\TreeGridInlineEditing\Index.cshtml" />
     <Content Include="Views\T1SignalService\Index.cshtml" />
-    <None Include="Views\TreeGrid\Create.cshtml" />
-    <None Include="Views\FormDemo\AskName.cshtml" />
-    <None Include="Views\FormDemo\FillForm.cshtml" />
-    <None Include="Views\GridNestingDemo\LunchDetail.cshtml" />
-    <None Include="Views\GridNestingDemo\MealGrid.cshtml" />
-    <None Include="Views\MealsCustomItemMultiLookup\SearchForm.cshtml" />
-    <None Include="Views\MealCustomItemLookup\SearchForm.cshtml" />
     <None Include="Views\Shared\top.cshtml" />
-    <None Include="Views\AjaxListCrud\Create.cshtml" />
-    <None Include="Views\Error\ErrorPartial.cshtml" />
-    <None Include="Views\GridDemo\SortingContent.cshtml" />
-    <None Include="Views\GridDemo\GroupingContent.cshtml" />
-    <None Include="Views\GridShowHideColumnsDemo\GridContent.cshtml" />
-    <None Include="Views\LookupDemo\IndexContent.cshtml" />
-    <None Include="Views\AddressesGridCrud\Create.cshtml" />
-    <None Include="Views\MasterDetailCrudDemo\Create.cshtml" />
-    <None Include="Views\MealCustomItemLookup\Details.cshtml" />
-    <None Include="Views\MealCustomItemLookup\Items.cshtml" />
-    <None Include="Views\MealCustomSearchLookup\SearchForm.cshtml" />
-    <None Include="Views\MealsCustomItemMultiLookup\Details.cshtml" />
-    <None Include="Views\MealsCustomItemMultiLookup\Items.cshtml" />
-    <None Include="Views\MealsCustomItemAjaxList\CustomItem.cshtml" />
-    <None Include="Views\MealsCustomSearchMultiLookup\SearchForm.cshtml" />
-    <Content Include="Areas\Area1\Views\Web.config" />
-    <Content Include="Areas\Area1\Views\A1Home\Index.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Hidden.cshtml" />
@@ -695,19 +379,6 @@
     <Content Include="Views\Shared\EditorTemplates\ColorDropdown.cshtml" />
     <Content Include="Views\Shared\Delete.cshtml" />
     <None Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
-    <None Include="Views\MealsTableLayoutAjaxList\CustomItems.cshtml" />
-    <None Include="Views\MealsTableLayoutAjaxList\TableHeader.cshtml" />
-    <None Include="Views\MailboxDemo\ReadMessage.cshtml" />
-    <None Include="Views\MultiLookupDemo\IndexContent.cshtml" />
-    <None Include="Views\PopupDemo\PopupWithParameters.cshtml" />
-    <None Include="Views\PopupFormDemo\PopupWithParameters.cshtml" />
-    <Content Include="Views\TreeGrid\Index.cshtml" />
-    <Content Include="Views\Unobtrusive\Index.cshtml" />
-    <Content Include="Views\WizardDemo\Index.cshtml" />
-    <None Include="Views\WizardDemo\WizardFinish.cshtml" />
-    <None Include="Views\WizardDemo\WizardStep1.cshtml" />
-    <None Include="Views\WizardDemo\WizardStep2.cshtml" />
-    <None Include="Views\PopupDemo\Popup1.cshtml" />
     <None Include="Views\Shared\EditorTemplates\AjaxDropdown.cshtml" />
     <None Include="Views\Shared\EditorTemplates\AjaxRadioList.cshtml" />
     <None Include="Views\Shared\EditorTemplates\AjaxCheckboxList.cshtml" />
@@ -723,10 +394,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Shared\EditorTemplates\_FieldLayout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\Area1\Models\" />
-    <Folder Include="Areas\Area1\Views\Shared\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Awem\Awem.csproj">
       <Project>{15eb31d2-5a2b-4678-a4e8-39d8a4068b7b}</Project>
