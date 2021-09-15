@@ -242,6 +242,7 @@
     <Content Include="Scripts\infra\gridUtils.js" />
     <Content Include="Scripts\infra\strUtil.js" />
     <Content Include="Scripts\cstorg.js" />
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\Demos\Grid\GanttChartController.cs" />
     <Compile Include="Controllers\Demos\Grid\GridAddInfoController.cs" />
     <Compile Include="Controllers\Demos\Grid\GridChartController.cs" />
@@ -504,6 +505,7 @@
     <None Include="Properties\PublishProfiles\profile1.pubxml" />
     <Content Include="Views\AweUi\Index.cshtml" />
     <Content Include="Views\Shared\Demos\AjaxListBoundToParent.cshtml" />
+    <Content Include="Views\Default\Index.cshtml" />
     <None Include="Views\DinnersGridCrud\Create.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\AjaxListDemo\Crud.cshtml" />
