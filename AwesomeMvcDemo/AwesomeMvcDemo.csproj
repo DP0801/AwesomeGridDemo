@@ -198,7 +198,9 @@
     <Content Include="Scripts\infra\gridUtils.js" />
     <Content Include="Scripts\infra\strUtil.js" />
     <Content Include="Scripts\cstorg.js" />
+    <Compile Include="Controllers\Awesome\DataController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\T1SignalServiceController.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="HttpResponse.cs" />
@@ -369,6 +371,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Sitemap\Index.cshtml" />
     <Content Include="Views\T1SignalService\Index.cshtml" />
+    <Content Include="Views\ErrorHandlingDemo\ErrOnPost.cshtml" />
+    <Content Include="Views\ErrorHandlingDemo\Index.cshtml" />
     <None Include="Views\Shared\top.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
@@ -394,7 +398,10 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Shared\EditorTemplates\_FieldLayout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Data\" />
+    <Folder Include="Views\Error\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Awem\Awem.csproj">
       <Project>{15eb31d2-5a2b-4678-a4e8-39d8a4068b7b}</Project>

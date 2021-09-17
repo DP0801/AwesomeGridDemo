@@ -38,67 +38,67 @@ namespace AwesomeMvcDemo
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            ////return;
-            //var exception = Server.GetLastError();
-            //// Log the exception.
-            //Response.Clear();
-            
-            //HttpContext.Current.Response.TrySkipIisCustomErrors = true;
+            //return;
+            var exception = Server.GetLastError();
+            // Log the exception.
+            Response.Clear();
 
-            //var httpException = exception as HttpException;
+            HttpContext.Current.Response.TrySkipIisCustomErrors = true;
 
-            //var routeData = new RouteData();
-            //routeData.Values.Add("controller", "Error");
+            var httpException = exception as HttpException;
 
-            //if (httpException == null)
-            //{
-            //    routeData.Values.Add("action", "Index");
-            //}
-            //else //It's an Http Exception, Let's handle it.
-            //{
-            //    switch (httpException.GetHttpCode())
-            //    {
-            //        case 404:
-            //            // Page not found.
-            //            routeData.Values.Add("action", "HttpError404");
-            //            break;
-            //        case 505:
-            //            // Server error.
-            //            routeData.Values.Add("action", "HttpError505");
-            //            break;
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "Error");
 
-            //        // Here you can handle Views to other error codes.
-            //        // I choose a General error template  
-            //        default:
-            //            routeData.Values.Add("action", "Index");
-            //            break;
-            //    }
-            //}
+            if (httpException == null)
+            {
+                routeData.Values.Add("action", "Index");
+            }
+            else //It's an Http Exception, Let's handle it.
+            {
+                switch (httpException.GetHttpCode())
+                {
+                    case 404:
+                        // Page not found.
+                        routeData.Values.Add("action", "HttpError404");
+                        break;
+                    case 505:
+                        // Server error.
+                        routeData.Values.Add("action", "HttpError505");
+                        break;
 
-            //// Pass exception details to the target error View.
-            //routeData.Values.Add("error", exception);
+                    // Here you can handle Views to other error codes.
+                    // I choose a General error template  
+                    default:
+                        routeData.Values.Add("action", "Index");
+                        break;
+                }
+            }
 
-            //// Clear the error on server.
-            //Server.ClearError();
-            
-            //try
-            //{
-            //    // Call target Controller and pass the routeData.
-            //    //IController errorController = new ErrorController();
-            //    //errorController.Execute(new RequestContext(
-            //    //    new HttpContextWrapper(Context), routeData));
-            //}
-            //catch (Exception)
-            //{
-            //    var rd = new RouteData();
-            //    rd.Values.Add("controller", "Error");
-            //    rd.Values.Add("action", "Master");
-            //    rd.Values.Add("error", exception);
+            // Pass exception details to the target error View.
+            routeData.Values.Add("error", exception);
 
-            //    //IController errorController = new ErrorController();
-            //    //errorController.Execute(new RequestContext(
-            //    //    new HttpContextWrapper(Context), rd));
-            //}
+            // Clear the error on server.
+            Server.ClearError();
+
+            try
+            {
+                // Call target Controller and pass the routeData.
+                IController errorController = new ErrorController();
+                errorController.Execute(new RequestContext(
+                    new HttpContextWrapper(Context), routeData));
+            }
+            catch (Exception)
+            {
+                var rd = new RouteData();
+                rd.Values.Add("controller", "Error");
+                rd.Values.Add("action", "Master");
+                rd.Values.Add("error", exception);
+
+                IController errorController = new ErrorController();
+                errorController.Execute(new RequestContext(
+                    new HttpContextWrapper(Context), rd));
+            }
         }
     }
 }
