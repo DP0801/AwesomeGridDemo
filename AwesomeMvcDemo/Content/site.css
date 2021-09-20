@@ -346,7 +346,7 @@ select.awe-display {
     background-image: url(editdel_w.png);
 }
 
-.ico-edit, .ico-del {
+.ico-edit, .ico-del, .ico-save {
     display: block;
     overflow: hidden;
     height: 18px;
@@ -360,6 +360,10 @@ select.awe-display {
 
 .ico-del {
     background-position: -17px -2px;
+}
+
+.ico-save {
+    background-position: -50px -1px;
 }
 /* grid btns */
 

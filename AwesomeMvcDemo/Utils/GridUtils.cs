@@ -121,7 +121,7 @@ namespace AwesomeMvcDemo.Utils
             //                     "<button type=\"button\" class=\"awe-btn o-glsvb awe-nonselect o-gl o-glbtn\"><span class=\"btn-cont\">Save</span></button>", tabindex);
 
             return string.Format("<button type=\"button\" class=\"awe-btn o-gledtb awe-nonselect o-glh o-glbtn\" {0} ><span class=\"ico-crud ico-edit\"></span></button>" +
-                                 "<button type=\"button\" class=\"awe-btn o-glsvb awe-nonselect o-gl o-glbtn\"><span class=\"btn-cont\">Save</span></button>", tabindex);
+                                 "<button type=\"button\" class=\"awe-btn o-glsvb awe-nonselect o-gl o-glbtn\"><span class=\"ico-crud ico-save\"></span></button>", tabindex);
         }
 
         public static string EditFormatForGrid(string gridId, string key = "Id", bool setId = false, bool nofocus = false)
