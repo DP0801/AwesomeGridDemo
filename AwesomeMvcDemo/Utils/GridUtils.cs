@@ -117,7 +117,10 @@ namespace AwesomeMvcDemo.Utils
         public static string InlineEditFormat(bool nofocus = false)
         {
             var tabindex = nofocus ? "tabindex = \"-1\"" : string.Empty;
-            return string.Format("<button type=\"button\" class=\"awe-btn o-gledtb awe-nonselect o-glh o-glbtn\" {0} ><span class=\"btn-cont\">Edit</span></button>" +
+            //return string.Format("<button type=\"button\" class=\"awe-btn o-gledtb awe-nonselect o-glh o-glbtn\" {0} ><span class=\"btn-cont\">Edit</span></button>" +
+            //                     "<button type=\"button\" class=\"awe-btn o-glsvb awe-nonselect o-gl o-glbtn\"><span class=\"btn-cont\">Save</span></button>", tabindex);
+
+            return string.Format("<button type=\"button\" class=\"awe-btn o-gledtb awe-nonselect o-glh o-glbtn\" {0} ><span class=\"ico-crud ico-edit\"></span></button>" +
                                  "<button type=\"button\" class=\"awe-btn o-glsvb awe-nonselect o-gl o-glbtn\"><span class=\"btn-cont\">Save</span></button>", tabindex);
         }
 

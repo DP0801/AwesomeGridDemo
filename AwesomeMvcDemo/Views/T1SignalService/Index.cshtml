@@ -96,8 +96,7 @@
          new Column { Bind = "Notes" }
             .Mod(o => o.Inline(Html.Awe().TextBox("Notes"))),
 
-          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 50 },
-          new Column { ClientFormat = Html.InlineCancelBtn(), Width = 60 }))
+          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 50 }))
 @(Html.BindOVld<T1ServiceModel>("#" + gridId, b =>
 {
     b.Prop("HostName", "noAsdf", "Name can't contain asdf");
@@ -298,6 +297,7 @@
     }
 </script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     .frowpnl {
         /*padding: 1em 0;*/
@@ -319,9 +319,18 @@
         width: 0;
         height: 0;
     }
-    .awe-tbody > tr > td:nth-last-child(1), .awe-tbody > tr > td:nth-last-child(2) {
+    /*.awe-tbody > tr > td:nth-last-child(1), .awe-tbody > tr > td:nth-last-child(2) {
+        text-align: center;*/
+      /*  border-right: 0;*/
+    /*}*/
+
+    .awe-tbody > tr > td:nth-last-child(3) {
+        vertical-align:middle;
+    } 
+    .awe-tbody > tr > td:nth-last-child(1)  {
         text-align: center;
-    }
+        /*  border-right: 0;*/
+    } 
 </style>
 @*endofr*@
 <br />
