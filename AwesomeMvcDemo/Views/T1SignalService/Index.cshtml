@@ -27,21 +27,26 @@
     @*context will add a prefix to all awesome editors html ids*@
     @using (Html.Awe().BeginContext(pref))
     {
-        <div class="firstdiv">
-            @*html input name matches filter rule name*@
-            <label>
-                Host Name:<br /> @Html.Awe().TextBox("HostName").ClearButton().Placeholder("HostName")
-            </label>
-            <label>
-                Program Name:<br /> @Html.Awe().TextBox("ProgramName").ClearButton().Placeholder("ProgramName")
-            </label>
-            <label>
-                Key:<br /> @Html.Awe().TextBox("Key").ClearButton().Placeholder("Key")
-            </label>
-            <label>
-                Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
-            </label>
-        </div>
+    <div class="firstdiv">
+        @*html input name matches filter rule name*@
+        <label>
+            Host Name:<br /> @Html.Awe().TextBox("HostName").ClearButton().Placeholder("HostName")
+        </label>
+        <label>
+            Program Name:<br /> @Html.Awe().TextBox("ProgramName").ClearButton().Placeholder("ProgramName")
+        </label>
+        <label>
+            Key:<br /> @Html.Awe().TextBox("Key").ClearButton().Placeholder("Key")
+        </label>
+        <label>
+            Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
+        </label>
+
+        <label>
+            Host Name <br />
+            @(Html.Awe().AjaxDropdown("drHostName").Url(Url.Action("GetHostName", "T1SignalService")))
+        </label>
+    </div>
     }
 
     <div class="seconddiv">

@@ -49,6 +49,31 @@ namespace AwesomeMvcDemo.Controllers
             return View(model);
         }
 
+        public ActionResult GetHostName()
+        {
+            string url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+            var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
+            var dropdownData = new T1ServiceModel();
+            if (response.RawResponse != null)
+            {
+                dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
+
+                var viewbagHostName = new List<SelectListItem>();
+
+                dropdownData.lstHostName.ForEach(h =>
+                {
+                    var host = new SelectListItem();
+                    host.Value = h.Value;
+                    viewbagHostName.Add(host);
+                });
+                 
+                ViewBag.HostNameList = viewbagHostName;
+            }
+
+            return Json(dropdownData.lstHostName);
+        }
+
         public ActionResult T1SignalServiceGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
         {
             log.Debug("test");
