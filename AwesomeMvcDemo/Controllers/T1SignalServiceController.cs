@@ -100,17 +100,37 @@ namespace AwesomeMvcDemo.Controllers
                     if (totalCount > g.PageSize)
                         PageCount = PageCount + 1;
 
+
+                    //This API call will retrieve data to bind dropdown
+                    url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+                    response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
+                    if (response.RawResponse != null)
+                    {
+                        var dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
+
+                        var viewbagHostName = new List<SelectListItem>();
+
+                        dropdownData.lstHostName.ForEach(h =>
+                        {
+                            var host = new SelectListItem();
+                            host.Value = h.Value;
+                            viewbagHostName.Add(host);
+                        });
+
+                        ViewBag.HostNameList = viewbagHostName;
+                    }
+
                     return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
                     {
                         KeyProp = o => o.Id,
-                        PageCount = PageCount
+                        PageCount = PageCount                        
                     }.Build());
                 }
                 else
                 {
                     log.Error($"Unable to get data for {url}:{response.StatusCode}:{response.ErrorMessage}");
                 }
-
             }
             catch (Exception ex)
             {
@@ -264,7 +284,7 @@ namespace AwesomeMvcDemo.Controllers
                 try
                 {
                     string data = JsonConvert.SerializeObject(bulkUpdateModel);
-                    
+
 
                     var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", data);
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -279,7 +299,7 @@ namespace AwesomeMvcDemo.Controllers
                 }
                 catch (Exception ex)
                 {
-                    returnMessage = ex.Message.ToString();                     
+                    returnMessage = ex.Message.ToString();
                     log.Error($"Error to call API {url}:{ex.ToString()}");
                 }
             }

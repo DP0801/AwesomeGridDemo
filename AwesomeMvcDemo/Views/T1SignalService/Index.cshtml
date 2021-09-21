@@ -47,6 +47,11 @@
             @Html.Awe().CheckBox("itemsType").Otoggl(o => o.No("Rows").Yes("Custom").Width("7em"))
         </label>*@
     <div style="float: right;">
+        @if (ViewBag.HostNameList != null)
+        {
+            @Html.DropDownList("HostName", (IEnumerable<SelectListItem>)ViewBag.HostNameList)
+        }
+
         <div style="margin-top: 16px; margin-right: 10px; float: left">
             <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
             <button type="button" onclick="$('#@gridId').data('api').batchSave()" class="awe-btn">Save All</button>
@@ -75,25 +80,25 @@
     //.Mod(o => o.Main().Custom("outsideFilter"))
     .Mod(o => o.Main(false).BatchEdit(Url.Action("BatchSave")).Custom("outsideFilter"))
     .Columns(
-          new Column { Bind = "Id", Width = 55 }
+          new Column { Bind = "Id", Width = 45 }
           .Mod(o => o.InlineId()),
 
-          new Column { Bind = "HostName", Width = 125 }
+          new Column { Bind = "HostName", Width = 60 }
             .Mod(o => o.Inline(Html.Awe().TextBox("HostName"))),
 
-           new Column { Bind = "ProgramName" }
+           new Column { Bind = "ProgramName", Width = 250 }
             .Mod(o => o.Inline(Html.Awe().TextBox("ProgramName"))),
 
-           new Column { Bind = "Key", Width = 125 }
+           new Column { Bind = "Key", Width = 80 }
             .Mod(o => o.Inline(Html.Awe().TextBox("Key"))),
 
-           new Column { Bind = "Value", Width = 130 }
+           new Column { Bind = "Value", Width = 180 }
             .Mod(o => o.Inline(Html.Awe().TextBox("Value"))),
 
-           new Column { Bind = "IsActive", Width = 60 }
+           new Column { Bind = "IsActive", Width = 45 }
             .Mod(o => o.Inline(Html.Awe().CheckBox("IsActive"))),
 
-         new Column { Bind = "Notes" }
+         new Column { Bind = "Notes", Width = 60 }
             .Mod(o => o.Inline(Html.Awe().TextBox("Notes"))),
 
           new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 50 }))
@@ -206,7 +211,7 @@
     }
 </script>
 <script>
-    $(function () {         
+    $(function () {
         // rows/custom render switch
         $('#itemsType').on('change', function () {
             changeItms($('#@gridId').data('o'), $(this).val() === 'true');
@@ -312,25 +317,28 @@
     .awe-row {
         line-height: 8px !important;
     }
+
     .awe-col {
         line-height: 20px !important;
     }
+
     .awe-sord {
         width: 0;
         height: 0;
     }
     /*.awe-tbody > tr > td:nth-last-child(1), .awe-tbody > tr > td:nth-last-child(2) {
         text-align: center;*/
-      /*  border-right: 0;*/
+    /*  border-right: 0;*/
     /*}*/
 
     .awe-tbody > tr > td:nth-last-child(3) {
-        vertical-align:middle;
-    } 
-    .awe-tbody > tr > td:nth-last-child(1)  {
+        vertical-align: middle;
+    }
+
+    .awe-tbody > tr > td:nth-last-child(1) {
         text-align: center;
         /*  border-right: 0;*/
-    } 
+    }
 </style>
 @*endofr*@
 <br />

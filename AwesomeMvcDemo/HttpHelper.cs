@@ -20,7 +20,10 @@ namespace AwesomeMvcDemo
                 var wrGETURL = WebRequest.Create(url);
 
                 wrGETURL.Method = method;
-                wrGETURL.ContentType = contentType;
+
+                if (!string.IsNullOrEmpty(contentType))
+                    wrGETURL.ContentType = contentType;
+
                 using (var stream = new StreamWriter(wrGETURL.GetRequestStream()))
                 {
                     stream.Write(data);

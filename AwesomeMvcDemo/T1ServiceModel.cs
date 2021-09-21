@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,8 +34,19 @@ namespace AwesomeMvcDemo
 
         [Display(Name = "Notes")]
         public string Notes { get; set; }
+
+
+        public List<CommonModel> lstHostName { get; set; }
+
+        public List<CommonModel> lstProgramName { get; set; }
+
+        public List<CommonModel> lstKeys { get; set; }
     }
 
+    public class CommonModel
+    {
+        public string Value { get; set; }
+    }
     public class T1ServiceModelInput
     {
         [Required]
