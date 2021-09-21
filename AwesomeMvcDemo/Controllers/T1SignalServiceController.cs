@@ -22,7 +22,31 @@ namespace AwesomeMvcDemo.Controllers
         // GET: T1SignalService
         public ActionResult Index()
         {
-            return View();
+            var model = new T1ServiceModel();
+            //This API call will retrieve data to bind dropdown
+            string url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+            var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
+            if (response.RawResponse != null)
+            {
+                var dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
+
+                var viewbagHostName = new List<SelectListItem>();
+
+                dropdownData.lstHostName.ForEach(h =>
+                {
+                    var host = new SelectListItem();
+                    host.Value = h.Value;
+                    viewbagHostName.Add(host);
+                });
+
+                model.lstHostName = dropdownData.lstHostName;
+                model.lstProgramName = dropdownData.lstProgramName;
+                model.lstKeys = dropdownData.lstKeys;
+                ViewBag.HostNameList = viewbagHostName;
+            }
+
+            return View(model);
         }
 
         public ActionResult T1SignalServiceGrid(GridParams g, string[] forder, string HostName, string ProgramName, string Key, string Value)
@@ -99,27 +123,6 @@ namespace AwesomeMvcDemo.Controllers
 
                     if (totalCount > g.PageSize)
                         PageCount = PageCount + 1;
-
-
-                    //This API call will retrieve data to bind dropdown
-                    url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
-
-                    response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
-                    if (response.RawResponse != null)
-                    {
-                        var dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
-
-                        var viewbagHostName = new List<SelectListItem>();
-
-                        dropdownData.lstHostName.ForEach(h =>
-                        {
-                            var host = new SelectListItem();
-                            host.Value = h.Value;
-                            viewbagHostName.Add(host);
-                        });
-
-                        ViewBag.HostNameList = viewbagHostName;
-                    }
 
                     return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
                     {
@@ -305,6 +308,93 @@ namespace AwesomeMvcDemo.Controllers
             }
 
             return Json(returnMessage, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult DropdownSearch(GridParams g, string HostName, string ProgramName = null, string Key = null)
+        {
+            string returnMessage = string.Empty;
+
+            string filterCriteria = string.Empty;
+
+            if (!string.IsNullOrEmpty(HostName))
+            {
+                filterCriteria = " HostName = '" + HostName + "' ";
+            }
+
+            if (!string.IsNullOrEmpty(ProgramName))
+            {
+                if (string.IsNullOrEmpty(filterCriteria))
+                    filterCriteria = " ProgramName = '" + ProgramName + "' ";
+                else
+                    filterCriteria = filterCriteria + " AND ProgramName = '" + ProgramName + "' ";
+            }
+
+            if (!string.IsNullOrEmpty(Key))
+            {
+                if (string.IsNullOrEmpty(filterCriteria))
+                    filterCriteria = " [Key] = '" + Key + "' ";
+                else
+                    filterCriteria = filterCriteria + " AND [Key] = '" + Key + "' ";
+            }
+
+
+            var response = new WebHttpResponse();
+            var baseModel = new BaseGridModel();
+            baseModel.search = filterCriteria;
+            baseModel.pagenumber = g.Page;
+            baseModel.pagesize = g.PageSize;
+
+            string requestData = JsonConvert.SerializeObject(baseModel);
+            string url = string.Format("{0}T1Service/GetServiceControllerData_Count", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+            try
+            {
+                //This API call is getting total count
+                response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
+
+                if (response.RawResponse == null)
+                {
+                    log.Error($"Unable to get data for {url}:{response.StatusCode}:{response.ErrorMessage}");
+                    return Json(new GridModelBuilder<T1ServiceModel>(null, g)
+                    {
+                        KeyProp = o => o.Id
+                    }.Build());
+                }
+
+                var totalCount = Convert.ToInt32(response.RawResponse);
+
+                //This API call will retrieve all records based on search
+                url = string.Format("{0}T1Service/ServiceDataGetAll_New", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+
+                response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", requestData);
+
+                if (response.RawResponse != null)
+                {
+                    var responseData = JsonConvert.DeserializeObject<List<T1ServiceModel>>(response.RawResponse).ToList().AsQueryable();
+                    int PageCount = (totalCount / g.PageSize);
+
+                    if (totalCount > g.PageSize)
+                        PageCount = PageCount + 1;
+
+                    return Json(new GridModelBuilder<T1ServiceModel>(responseData, g)
+                    {
+                        KeyProp = o => o.Id,
+                        PageCount = PageCount
+                    }.Build());
+                }
+                else
+                {
+                    log.Error($"Unable to get data for {url}:{response.StatusCode}:{response.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Error to call API {url}:{ex.ToString()}");
+            }
+            return Json(new GridModelBuilder<T1ServiceModel>(null, g)
+            {
+                KeyProp = o => o.Id
+            }.Build());             
         }
 
         private object MapToGridModel(T1ServiceModel o)
