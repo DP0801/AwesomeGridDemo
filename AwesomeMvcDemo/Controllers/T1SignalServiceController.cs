@@ -24,27 +24,27 @@ namespace AwesomeMvcDemo.Controllers
         {
             var model = new T1ServiceModel();
             ////This API call will retrieve data to bind dropdown
-            string url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
+            //string url = string.Format("{0}T1Service/GetCommonDropdown", ConfigurationManager.AppSettings["dronacontrolsiteapiurl"]);
 
-            var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
-            if (response.RawResponse != null)
-            {
-                var dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
+            //var response = HttpHelper.SendHTTPRequest(url, "POST", @"application/json; charset=utf-8", null);
+            //if (response.RawResponse != null)
+            //{
+            //    var dropdownData = JsonConvert.DeserializeObject<T1ServiceModel>(response.RawResponse);
 
-                var viewbagHostName = new List<SelectListItem>();
+            //    var viewbagHostName = new List<SelectListItem>();
 
-                dropdownData.lstHostName.ForEach(h =>
-                {
-                    var host = new SelectListItem();
-                    host.Value = h.Value;
-                    viewbagHostName.Add(host);
-                });
+            //    dropdownData.lstHostName.ForEach(h =>
+            //    {
+            //        var host = new SelectListItem();
+            //        host.Value = h.Value;
+            //        viewbagHostName.Add(host);
+            //    });
 
-                model.lstHostName = dropdownData.lstHostName;
-                model.lstProgramName = dropdownData.lstProgramName;
-                model.lstKeys = dropdownData.lstKeys;
-                ViewBag.HostNameList = viewbagHostName;
-            }
+            //    model.lstHostName = dropdownData.lstHostName;
+            //    model.lstProgramName = dropdownData.lstProgramName;
+            //    model.lstKeys = dropdownData.lstKeys;
+            //    ViewBag.HostNameList = viewbagHostName;
+            //}
 
             return View(model);
         }
