@@ -27,7 +27,7 @@
     @*context will add a prefix to all awesome editors html ids*@
     @using (Html.Awe().BeginContext(pref))
     {
-    @*<div class="firstdiv">*@
+    <div class="firstdiv">
         @*html input name matches filter rule name*@
         <label>
             Host Name:<br /> @Html.Awe().TextBox("HostName").ClearButton().Placeholder("HostName")
@@ -41,10 +41,10 @@
         <label>
             Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
         </label>         
-    @*</div>*@
+    </div>
     }
 
-    @*<div class="seconddiv">
+    <div class="seconddiv">
         @using (Ajax.BeginForm("DropdownSearch", "T1SignalService", new AjaxOptions { OnSuccess = "OnSucessForm1" }, new { @id = "Form2" }))
         {
             <label>
@@ -65,7 +65,7 @@
             <button type="submit" class="awe-btn">Search</button>
         }
 
-    </div>*@
+    </div>
     <div style="float: right;">
         <div style="margin-top: 16px; margin-right: 10px; float: left">
             <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
