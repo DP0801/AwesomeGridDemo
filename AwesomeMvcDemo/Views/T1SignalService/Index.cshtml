@@ -27,7 +27,7 @@
     @*context will add a prefix to all awesome editors html ids*@
     @using (Html.Awe().BeginContext(pref))
     {
-    <div class="firstdiv">
+    @*<div class="firstdiv">*@
         @*html input name matches filter rule name*@
         <label>
             Host Name:<br /> @Html.Awe().TextBox("HostName").ClearButton().Placeholder("HostName")
@@ -40,16 +40,11 @@
         </label>
         <label>
             Value:<br /> @Html.Awe().TextBox("Value").ClearButton().Placeholder("Value")
-        </label>
-
-        <label>
-            Host Name <br />
-            @(Html.Awe().AjaxDropdown("drHostName").Url(Url.Action("GetHostName", "T1SignalService")))
-        </label>
-    </div>
+        </label>         
+    @*</div>*@
     }
 
-    <div class="seconddiv">
+    @*<div class="seconddiv">
         @using (Ajax.BeginForm("DropdownSearch", "T1SignalService", new AjaxOptions { OnSuccess = "OnSucessForm1" }, new { @id = "Form2" }))
         {
             <label>
@@ -70,7 +65,7 @@
             <button type="submit" class="awe-btn">Search</button>
         }
 
-    </div>
+    </div>*@
     <div style="float: right;">
         <div style="margin-top: 16px; margin-right: 10px; float: left">
             <button type="button" onclick="$('#@gridId').data('api').inlineCreate()" class="awe-btn">Create</button>
@@ -115,13 +110,13 @@
            new Column { Bind = "Value", Width = 180 }
             .Mod(o => o.Inline(Html.Awe().TextBox("Value"))),
 
-           new Column { Bind = "IsActive", Width = 45 }
+           new Column { Bind = "IsActive", Width = 40 }
             .Mod(o => o.Inline(Html.Awe().CheckBox("IsActive"))),
 
          new Column { Bind = "Notes", Width = 60 }
             .Mod(o => o.Inline(Html.Awe().TextBox("Notes"))),
 
-          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 50 }))
+          new Column { ClientFormat = GridUtils.InlineEditFormat(), Width = 40 }))
 @(Html.BindOVld<T1ServiceModel>("#" + gridId, b =>
 {
     b.Prop("HostName", "noAsdf", "Name can't contain asdf");
